@@ -1,26 +1,132 @@
-.chart-container {
-    width: 600px;
-    margin: 40px auto;
-    text-align: center;
-  }
-  
-  .metric-container {
-    width: 600px;
-    margin: 40px auto;
-    text-align: center;
-    font-size: 24px;
-    background-color: #f8f9fa;
+/* General dashboard styling */
+.dashboard-container {
     padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    color: #4A4A4A;
+  }
+  
+  /* Styling for metrics box */
+  .metrics-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
     border-radius: 10px;
-  }
-  
-  h3 {
-    font-size: 22px;
     margin-bottom: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
   }
   
-  p {
-    font-size: 28px;
-    color: #4bc0c0;
+  .metrics-box:hover {
+    background-color: #dfe6e9;
+  }
+  
+  .metrics-box h2 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #2d3436;
+  }
+  
+  .metrics-box p {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #0984e3;
+  }
+  
+  /* Flexbox layout for charts */
+  .chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .chart-box {
+    flex: 1 1 45%;
+    min-width: 400px;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .chart-box:hover {
+    transform: scale(1.05);
+  }
+  
+  .chart-box h2 {
+    font-size: 1.5em;
+    color: #2d3436;
+    margin-bottom: 10px;
+  }
+  
+  /* Recharts sizing fix */
+  .recharts-wrapper {
+    max-width: 100%;
+    height: 300px;
+  }
+  
+  .recharts-text {
+    font-size: 12px;
+  }
+  
+  /* Improve Y-axis text display */
+  .chart-box .recharts-yAxis text {
+    font-size: 12px;
+    text-anchor: end;
+    overflow: visible;
+    word-wrap: break-word;
+    white-space: initial;
+  }
+  
+  /* Scroll prevention */
+  body {
+    overflow-y: hidden;
+  }
+  
+  /* Custom color scheme for charts */
+  .bar-chart .recharts-bar-rectangle {
+    fill: #00b894;
+  }
+  
+  .pie-chart .recharts-pie-sector {
+    fill-opacity: 0.85;
+    transition: fill-opacity 0.3s;
+  }
+  
+  .pie-chart .recharts-pie-sector:hover {
+    fill-opacity: 1;
+  }
+  
+  .pie-chart .recharts-label {
+    font-size: 14px;
+    fill: #636e72;
+  }
+  
+  /* Colors for bars in services and instabilities charts */
+  .bar-chart .bar-services {
+    fill: #0984e3;
+  }
+  
+  .bar-chart .bar-instabilities {
+    fill: #e17055;
+  }
+  
+  /* Tooltip customization */
+  .recharts-tooltip-wrapper {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+    color: #2d3436;
   }
   
