@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const path = require('path');
+const { getFirestore, doc, collection, addDoc } = require('firebase/firestore');
 require('dotenv').config();
 
 const app = express();
@@ -39,6 +40,7 @@ app.post('/verify-token', async (req, res) => {
   }
 });
 
+// PATIENTS
 // Fetch patient data by ID
 app.get('/patients/:id', async (req, res) => {
     const patientId = req.params.id;
@@ -91,15 +93,20 @@ app.get('/patients', async (req, res) => {
 // Initial Patient Form
 app.post('/patients/initial-form', async (req, res) => {
   let patientInitialData = {};
+  let userID = "";
   try {
     patientInitialData = req.body;
+    userID = patientInitialData.name;
     console.log(patientInitialData);
   } catch(error) {
     console.error('Error fetching patients initial data:', error);
     res.status(500).json({ error: 'Error fetching patients initial data' });
   }
   try {
-    await db.collection('patients').add(patientInitialData);
+    await db.collection('patients').doc(userID).set(patientInitialData);
+    await db.collection('medicalRecords').doc(userID).set({});
+    await db.collection('appointments').doc(userID).set({"appointments": [""]});
+    await db.collection('classes').doc(userID).set({"classes": [""]});
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
   } catch(error) {
     console.error('Error adding data to database:', error);
@@ -107,7 +114,111 @@ app.post('/patients/initial-form', async (req, res) => {
   }
 });
 
-// Fetch all patients data
+// POST to classes if patient signs up for a class
+// app.post('/classes/add', async(req, res) => {
+//   const name = req.body.name;
+//   const newClass = req.body.newClass;
+
+//   try {
+//     const classesRef = db.collection('classes').doc(name);
+//     console.log(classesRef);
+
+//     const doc = await classesRef.get();
+//     console.log(doc);
+//     if (!doc.exists) {
+//       return res.status(404).json({ message: 'No classes found for this patient' });
+//     }
+    
+//     await classesRef.update({
+//       classes: admin.firestore.FieldValue.arrayUnion(newClass)
+//     });
+
+//     res.status(200).json({ message: 'Class added successfully' });
+//   } catch (error) {
+//     console.error('Error adding class:', error);
+//     res.status(500).json({ error: 'Error adding class' });
+//   }
+// });
+
+
+// POST to appts if patient signs up for an appt
+
+
+// GET to classes to fetch classes
+app.get('/classes/get', async(req, res) => {
+  let name = req.body.name;
+  
+  try {
+    const classesRef = db.collection('classes').doc(name);
+    const doc = await classesRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No classes found for this patient' });
+    }
+
+    res.json(doc.data());
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+    res.status(500).json({ error: 'Error fetching class' });
+  }
+})
+
+
+// GET to appts to fetch appts
+app.get('/appointments/get', async(req, res) => {
+  let name = req.body.name;
+  
+  try {
+    const apptsRef = db.collection('appointments').doc(name);
+    const doc = await apptsRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No appointments found for this patient' });
+    }
+
+    res.json(doc.data());
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    res.status(500).json({ error: 'Error fetching appointments' });
+  }
+})
+
+// Patient View Information
+
+// Specific Patient Medical Records
+app.get('/patients/medical-records', async (req, res) => {
+  let username = {};
+  try {
+    username = req.body;
+    console.log(username);
+  } catch(error) {
+    console.error('Error fetching patients username:', error);
+    res.status(500).json({ error: 'Error patients username' });
+  }
+  try {
+    const userID = await db.collection('patients').get();
+    //const labReports = await db.collection('medicalRecords').get();
+    //const patients = snapshot.docs.map(doc => doc.data());
+  
+    res.status(200).json(userID);
+  } catch(error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Error fetching data from database' });
+  }
+});
+
+// Patient Lab Report
+app.get('/patient/lab-report', async (req, res) => {
+  try{
+
+  } catch(error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Error fetching data from database' });
+  }
+});
+
+// PROVIDERS
+// Get all patients data
 app.get('/patients', async (req, res) => {
   try {
     const snapshot = await db.collection('patients').get();
@@ -120,33 +231,49 @@ app.get('/patients', async (req, res) => {
   }
 });
 
-app.get('/providers/patient-records', async (req, res) => {
+// GET a specific patient's medical records
+app.get('/patient/record', async (req, res) => {
+  const name = req.body.name;
+
   try {
-    const providerSnapshot = await db.collection('providers').get();
-    const allPatientRecords = [];
+    const recordRef = db.collection('medicalRecords').doc(name);
+    const doc = await recordRef.get();
 
-    for (const doc of providerSnapshot.docs) {
-      const providerData = doc.data();
-      const patients = providerData.patients;
-      console.log(patients);
-
-      for (const patient of patients) {
-
-        const medicalRecordsSnapshot = await db.collection('medicalRecords').get(patient);
-        console.log(medicalRecordsSnapshot);
-
-        medicalRecordsSnapshot.forEach(recordDoc => {
-          allPatientRecords.push(recordDoc.data());
-        });
-      }
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No medical records found for this patient' });
     }
-    res.json(allPatientRecords);
 
-  } catch(error) {
+    res.json(doc.data());
+
+  } catch (error) {
     console.error('Error fetching patient records:', error);
-    res.status(500).json({ error: 'Error fetching patients records' });
+    res.status(500).json({ error: 'Error fetching record' });
   }
 });
+
+// POST to a specific patient's medical records
+// app.post('patient/record/update', async(req, res) => {
+//   const name = req.body.name;
+//   const updatedFields = req.body;
+//   console.log(updatedFields)
+
+//   try {
+//     const recordRef = db.collection('medicalRecords').doc(name);
+
+//     const doc = await recordRef.get();
+//     if (!doc.exists) {
+//       return res.status(404).json({ message: 'No medical records found for this patient' });
+//     }
+
+//     await recordRef.update(updatedFields);
+
+//     res.status(200).json({ message: 'Medical records updated successfully' });
+//   } catch (error) {
+//     console.error('Error updating patient records:', error);
+//     res.status(500).json({ error: 'Error updating records' });
+//   }
+// })
+
 
 // Start the server
 const port = 8008;
