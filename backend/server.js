@@ -113,6 +113,47 @@ app.post('/patients/initial-form', async (req, res) => {
   }
 });
 
+// Fetch all patients data
+app.get('/patients', async (req, res) => {
+  try {
+    const snapshot = await db.collection('patients').get();
+    const patients = snapshot.docs.map(doc => doc.data());
+
+    res.json(patients);
+  } catch (error) {
+    console.error('Error fetching patients data:', error);
+    res.status(500).json({ error: 'Error fetching patients data' });
+  }
+});
+
+app.get('/providers/patient-records', async (req, res) => {
+  try {
+    const providerSnapshot = await db.collection('providers').get();
+    const allPatientRecords = [];
+
+    for (const doc of providerSnapshot.docs) {
+      const providerData = doc.data();
+      const patients = providerData.patients;
+      console.log(patients);
+
+      for (const patient of patients) {
+
+        const medicalRecordsSnapshot = await db.collection('medicalRecords').get(patient);
+        console.log(medicalRecordsSnapshot);
+
+        medicalRecordsSnapshot.forEach(recordDoc => {
+          allPatientRecords.push(recordDoc.data());
+        });
+      }
+    }
+    res.json(allPatientRecords);
+
+  } catch(error) {
+    console.error('Error fetching patient records:', error);
+    res.status(500).json({ error: 'Error fetching patients records' });
+  }
+});
+
 // Patient View Information
 
 // Specific Patient Medical Records

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 const SurveyForm = () => {
   // Initialize state for each question
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [race, setRace] = useState("");
@@ -67,6 +69,20 @@ const SurveyForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <h2>General Questions</h2>
+      <label>Enter your username: </label>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+
+      <label>Enter your full name: </label>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
       <label>Age</label>
       <input
         type="number"
@@ -178,7 +194,7 @@ const SurveyForm = () => {
       </select>
 
       <label>Are you currently on food stamps?</label>
-      <select value={foodStamps} onChange={(e) => foodStamps(e.target.value)} required>
+      <select value={foodStamps} onChange={(e) => setFoodStamps(e.target.value)} required>
         <option value="">Select</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
