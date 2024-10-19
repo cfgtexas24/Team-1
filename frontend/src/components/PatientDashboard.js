@@ -12,20 +12,40 @@ const PatientDashboard = () => {
     }
   )
 
-  const [labs, setLabs] = useState ([])
+  const [labs, setLabs] = useState(['lab 1 file text here :)', 'lab 2 file text here again'])
 
-  const [latestAppointment, setLatestAppointment] = useState (
-
+  const [latestAppointment, setLatestAppointment] = useState(
+    {
+      date: '08/08/2025',
+      info: 'appointment info goes here'
+  
+    }
   )
 
   const [input, setInput] = useState();
 
   // useEffect();
-  
+
   return (
-    <div className='flex flex-row w-full'>
-      <div className="flex h-full w-[900px] bg-slate-700" >Hello </div>
-      {patient.firstName}, {patient.lastName}
+    <div className='flex flex-row w-screen h-screen'>
+      <div className="flex h-full w-1/4 bg-slate-700 justify-center items-center text-white">
+        <h1>Hello, <span><b> {patient.firstName} {patient.lastName}</b></span></h1>
+      </div>
+      <div className="flex flex-col h-full w-full bg-gray-300 p-8">
+        <h2 className='font-bold text-xl'>Good day! Here are your latest lab reports:</h2>
+        <div className='flex flex-row'>
+          {labs.map((lab, index) => (
+            <div key={index} className='p-2'>
+              {lab}
+            </div>
+          ))}
+        </div>
+        <h2 className='text-xl pt-8'>You have an upcoming appointment at <span><b>{latestAppointment.date}</b></span> with the following information below</h2>
+        <p>{latestAppointment.info}</p>
+      </div>
+      <form>
+        <label></label>
+      </form>
     </div>
   )
 }
