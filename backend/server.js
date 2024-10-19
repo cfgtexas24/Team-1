@@ -109,7 +109,7 @@ app.post('/patients/initial-form', async (req, res) => {
     await db.collection('patients').doc(userID).set(patientInitialData);
     await db.collection('medicalRecords').doc(userID).set({"weight": 0, "bloodPressure": 0, "notes": "", "abdomenMeasurement": 0, "nutrition": "", "exercise": "", "prenatalTesting": "", "concerns": "", "emotionalWellBeing": "", "birthPlan": "" , "successfulBirth": "", "birthComplications": "", "servicesAccessed": ""});
     await db.collection('appointments').doc(userID).set({"appointments": [""]});
-    await db.collection('classes').doc(userID).set({"classes": [""]});
+    await db.collection('classes').doc(userID).set({"classes": []});
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
   } catch(error) {
     console.error('Error adding data to database:', error);
@@ -117,32 +117,69 @@ app.post('/patients/initial-form', async (req, res) => {
   }
 });
 
-// POST to classes if patient signs up for a class
-// app.post('/classes/add', async(req, res) => {
-//   const name = req.body.name;
-//   const newClass = req.body.newClass;
+// POST to classes if patient signs up for a class and decrement openings
+app.post('/patient/class-sign-up', async (req, res) => {
+  const body = req.body;
+  const name = body.name;
+  const className = body.className;
+  console.log(className);
 
-//   try {
-//     const classesRef = db.collection('classes').doc(name);
-//     console.log(classesRef);
+  try {
+    const recordRef = db.collection('class_offerings').doc(className);
 
-//     const doc = await classesRef.get();
-//     console.log(doc);
-//     if (!doc.exists) {
-//       return res.status(404).json({ message: 'No classes found for this patient' });
-//     }
+    // Get the patient's medical record document
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'Class does not exist' });
+    }
+
+    // Update to decrement the openings
+    const data = doc.data();
+    const openings = data.openings;
+    const dateTime = data.time.toDate();
+    console.log("dateTime", dateTime);
+    const currentDateTime = new Date();
+    console.log("currentDateTime", currentDateTime);
+
+    if(dateTime < currentDateTime) {
+      return res.status(400).json({ error: 'The sign-up period for this class has ended' });
+    }
     
-//     await classesRef.update({
-//       classes: admin.firestore.FieldValue.arrayUnion(newClass)
-//     });
+    // Error for no openings
+    if(openings-1 < 0) {
+      return res.status(400).json({ error: 'No openings available' });
+    }
 
-//     res.status(200).json({ message: 'Class added successfully' });
-//   } catch (error) {
-//     console.error('Error adding class:', error);
-//     res.status(500).json({ error: 'Error adding class' });
-//   }
-// });
+    // Update classes for the specific patient
+    const recordRefPatientClasses = db.collection('classes').doc(name);
+    const docPatientClasses = await recordRefPatientClasses.get();
 
+    if (!docPatientClasses.exists) {
+      return res.status(404).json({ error: 'Patient does not exist' });
+    }
+
+    const dataPatientClasses = docPatientClasses.data();
+    const classesList = dataPatientClasses.classes || [];
+
+    // Already signed up
+    if(classesList.includes(className)) {
+      return res.status(400).json({ error: 'Already signed up for this class' });
+    }
+
+    // Decrement openings now that we know class and patient are both valid
+    await recordRef.update({ openings: openings-1 });
+
+    // Update to add the class
+    classesList.push(className);
+    await recordRefPatientClasses.update({ classes: classesList });
+
+    res.status(200).json({ message: `Signed up successfully` });
+  } catch (error) {
+    console.error(`Error signing up for class with className=${className}:`, error);
+    res.status(500).json({ error: `Error signing up for class with className=${className}` });
+  }
+});
 
 // POST to appts if patient signs up for an appt
 
