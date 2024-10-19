@@ -181,7 +181,10 @@ app.post('/patient/class-sign-up', async (req, res) => {
   }
 });
 
-// POST to appts if patient signs up for an appt
+// POST to appts for patient signs up for an appt
+app.post('/patient/appointment-sign-up', async (req, res) => {
+  
+});
 
 // GET for class offerings
 app.get('/classes/offered', async (req, res) => {
@@ -229,18 +232,18 @@ app.get('/appointments/get', async(req, res) => {
   try {
     const apptsRef = db.collection('appointments').doc(name);
     const doc = await apptsRef.get();
-    console.log(doc.data())
-
-    // convert date from nasty Firebase format to ISO
-    const milliseconds = doc.data().date.seconds * 1000 + Math.floor(doc.data().date.nanoseconds / 1000);
-    const isoDateString = new Date(milliseconds).toISOString();
-    const normalizedData = {...doc.data(), date: isoDateString}
 
     if (!doc.exists) {
       return res.status(404).json({ message: 'No appointments found for this patient' });
     }
 
-    res.json(normalizedData);
+    const data = doc.data();
+    const apptDate = data.time.toDate();
+    const dictionary = {};
+    dictionary['time'] = apptDate;
+    dictionary['info'] = data.info;
+
+    res.status(200).json(dictionary);
   } catch (error) {
     console.error('Error fetching appointments:', error);
     res.status(500).json({ error: 'Error fetching appointments' });
