@@ -8,6 +8,7 @@ import Login from './components/Login';
 import PatientDashboard from './components/PatientDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
 import AdminDashboard from './components/AdminDashboard'; // Import the AdminDashboard component
+import './AdminDashboard.css';
 import SurveyForm from './components/SurveyForm';
 
 function App() {
@@ -26,5 +27,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;
