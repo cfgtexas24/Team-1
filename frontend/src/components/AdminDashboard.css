@@ -21,15 +21,16 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-=======
+}
+
 .filter-form {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* This aligns checkboxes across */
+  justify-content: space-around; /* Aligns checkboxes across */
   padding: 10px;
-  border: 1px solid #dfe6e9;
-  background-color: #f3e2c5;
-  max-width: 600px; /* You can adjust the width as per your design */
+  border: 1px solid rgb(211, 227, 228); /* Light Blue/Grey border */
+  background-color: rgb(243, 226, 197); /* Light tan background */
+  max-width: 600px; /* Adjust width as per design */
   margin: 0 auto;
   border-radius: 10px;
 }
