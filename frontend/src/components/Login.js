@@ -9,7 +9,7 @@ const Login = () => {
         <input type="text" placeholder="Username" className="input-box" />
         <input type="password" placeholder="Password" className="input-box" />
         <button type="submit" className="submit-button">Login</button>
-        <Link to="/patient/signup">Create Account</Link>
+        <Link to="/">Create Account</Link>
       </form>
     </div>
   )
