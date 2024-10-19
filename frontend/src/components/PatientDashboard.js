@@ -72,10 +72,10 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
 
   // for useEffect()
   // requests:
-  // get patient demographic data
-  // get appointments of patient
-  // get currently signed up classes
-  // get available classes to attend
+  // get patient demographic data     GET /patients/demographics
+  // get appointments of patient      GET /appointments/get
+  // get currently signed up classes  GET /classes/get
+  // get available classes to attend  GET /classes/offered
   useEffect(() => {
     // sort all events (classes and appointments) by date 
     const combined = [
