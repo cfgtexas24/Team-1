@@ -2,21 +2,21 @@ import React, { useState } from "react";
 
 const SurveyForm = () => {
   // Initialize state for each question
-  const [dob, setDob] = useState("");
+  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [race, setRace] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [pregnant, setPregnant] = useState("");
   const [weeksPregnant, setWeeksPregnant] = useState("");
   const [previousPregnancies, setPreviousPregnancies] = useState("");
-  const [complications, setComplications] = useState("");
-  const [chronicConditions, setChronicConditions] = useState("");
-  const [medications, setMedications] = useState("");
+  const [miscarriages, setMiscarriage] = useState("");
+  const [postpartum, setPostpartum] = useState("");
+  const [weeksSinceBirth, setWeeksSinceBirth] = useState("");
+  const [seizures, setSeizures] = useState("");
+  const [preeclampsia, setPreeclampsia] = useState("");
   const [healthInsurance, setHealthInsurance] = useState("");
-  const [referralSource, setReferralSource] = useState("");
-  const [interestedServices, setInterestedServices] = useState("");
-  const [accessDifficulty, setAccessDifficulty] = useState("");
-  const [challenges, setChallenges] = useState("");
+  const [unhoused, setUnhoused] = useState("");
+  const [foodStamps, setFoodStamps] = useState("");
 
   // Submit handler for form submission
   const handleSubmit = async (e) => {
@@ -24,25 +24,25 @@ const SurveyForm = () => {
 
     // Create an object with the survey data
     const surveyData = {
-      dob,
+      age,
       gender,
       race,
       zipCode,
       pregnant,
       weeksPregnant,
       previousPregnancies,
-      complications,
-      chronicConditions,
-      medications,
+      miscarriages,
+      postpartum,
+      weeksSinceBirth,
+      seizures,
+      preeclampsia,
       healthInsurance,
-      referralSource,
-      interestedServices,
-      accessDifficulty,
-      challenges,
+      unhoused,
+      foodStamps
     };
 
     try {
-      // Send data to the backend using fetch (or axios)
+      // Send data to the backend using fetch
       const response = await fetch("/patient-initial-form", {
         method: "POST",
         headers: {
@@ -54,7 +54,7 @@ const SurveyForm = () => {
       if (response.ok) {
         // Handle successful response
         console.log("Survey submitted successfully!");
-        // Optionally, clear the form after submission
+        // Optionally clear the form after submission
       } else {
         // Handle error response
         console.log("Error submitting the survey");
@@ -67,12 +67,11 @@ const SurveyForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <h2>General Questions</h2>
-      <label>Date of Birth</label>
+      <label>Age</label>
       <input
-        type="date"
-        value={dob}
-        onChange={(e) => setDob(e.target.value)}
-        required
+        type="number"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
       />
 
       <label>Gender</label>
@@ -96,7 +95,7 @@ const SurveyForm = () => {
 
       <label>Zip Code</label>
       <input
-        type="text"
+        type="number"
         value={zipCode}
         onChange={(e) => setZipCode(e.target.value)}
         required
@@ -124,29 +123,43 @@ const SurveyForm = () => {
         onChange={(e) => setPreviousPregnancies(e.target.value)}
       />
 
-      <label>Have you experienced any complications in previous pregnancies?</label>
-      <select value={complications} onChange={(e) => setComplications(e.target.value)} required>
+      <label>Are you postpartum?</label>
+      <select value={postpartum} onChange={(e) => setPostpartum(e.target.value)} required>
+        <option value="">Select</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <label>If postpartum, how many weeks since birth?</label>
+      <input
+        type="number"
+        value={weeksSinceBirth}
+        onChange={(e) => setWeeksSinceBirth(e.target.value)}
+      />
+
+      <label>Have you ever had a miscarriage?</label>
+      <select value={pregnant} onChange={(e) => setMiscarriage(e.target.value)} required>
+        <option value="">Select</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <label>Have you experienced any seizures in the past?</label>
+      <select value={seizures} onChange={(e) => setSeizures(e.target.value)} required>
         <option value="">Select</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
         <option value="na">N/A</option>
       </select>
 
-      <label>Do you have any chronic medical conditions (e.g., diabetes, hypertension)?</label>
-      <input
-        type="text"
-        value={chronicConditions}
-        onChange={(e) => setChronicConditions(e.target.value)}
-        required
-      />
+      <label>Have you experienced preeclampsia in the past?</label>
+      <select value={preeclampsia} onChange={(e) => setPreeclampsia(e.target.value)} required>
+        <option value="">Select</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+        <option value="na">N/A</option>
+      </select>
 
-      <label>Are you taking any medications or supplements?</label>
-      <input
-        type="text"
-        value={medications}
-        onChange={(e) => setMedications(e.target.value)}
-        required
-      />
 
       <h2>Healthcare Access</h2>
       <label>Do you have health insurance?</label>
@@ -157,39 +170,19 @@ const SurveyForm = () => {
         <option value="uncertain">Uncertain</option>
       </select>
 
-      <label>How did you hear about our services?</label>
-      <select value={referralSource} onChange={(e) => setReferralSource(e.target.value)} required>
+      <label>What is your current housing situation?</label>
+      <select value={unhoused} onChange={(e) => setUnhoused(e.target.value)} required>
         <option value="">Select</option>
-        <option value="referral">Referral</option>
-        <option value="social-media">Social Media</option>
-        <option value="friend-family">Friend/Family</option>
-        <option value="internet-search">Internet Search</option>
+        <option value="yes">Stable Housing Situation</option>
+        <option value="no">Unstable Housing Situation</option>
       </select>
 
-      <label>What healthcare services are you interested in?</label>
-      <select value={interestedServices} onChange={(e) => setInterestedServices(e.target.value)} required>
-        <option value="">Select</option>
-        <option value="prenatal-care">Prenatal care</option>
-        <option value="postpartum-care">Postpartum care</option>
-        <option value="lactation-support">Lactation support</option>
-        <option value="doula-services">Doula services</option>
-        <option value="nutrition">Nutrition</option>
-        <option value="mental-health">Mental Health</option>
-      </select>
-
-      <label>Have you had difficulty accessing healthcare in the past?</label>
-      <select value={accessDifficulty} onChange={(e) => setAccessDifficulty(e.target.value)} required>
+      <label>Are you currently on food stamps?</label>
+      <select value={foodStamps} onChange={(e) => foodStamps(e.target.value)} required>
         <option value="">Select</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
       </select>
-
-      <label>If yes, what were the challenges?</label>
-      <input
-        type="text"
-        value={challenges}
-        onChange={(e) => setChallenges(e.target.value)}
-      />
 
       <button type="submit">Submit</button>
     </form>
