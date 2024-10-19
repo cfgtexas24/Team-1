@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/patient/login" element={<Login />} />
-        <Route path="/patient/home" element={<PatientDashboard />} />
+        <Route path="/patient/dashboard" element={<PatientDashboard />} />
         {/* Standalone Admin Dashboard Route */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/patient-list" element={<PatientList />} />

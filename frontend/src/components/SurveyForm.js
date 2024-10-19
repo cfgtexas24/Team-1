@@ -244,7 +244,7 @@ const SurveyForm = () => {
         </select>
       </div>
 
-      <Link to="/patient-dashboard" className="submit-button">
+      <Link to="/patient/dashboard" className="submit-button">
           Submit
         </Link>
     </form>
