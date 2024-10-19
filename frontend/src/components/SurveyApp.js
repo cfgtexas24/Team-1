@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import SurveyForm from './components/SurveyForm';
+import SurveyForm from './SurveyForm';
 
 function App() {
   return (
