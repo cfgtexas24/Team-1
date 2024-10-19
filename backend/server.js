@@ -183,8 +183,21 @@ app.post('/patient/class-sign-up', async (req, res) => {
 
 // POST to appts if patient signs up for an appt
 
+// GET for class offerings
+app.get('/classes/offered', async (req, res) => {
+  try {
+    const dictionary = {};
+    const snapshot = await db.collection('class_offerings').get();
+    snapshot.docs.forEach(doc => dictionary[doc.id] = doc.data());
+    console.log(dictionary);
+    res.status(200).json(dictionary);
+  } catch (error) {
+    console.error('Error fetching class offerings data:', error);
+    res.status(500).json({ error: 'Error fetching class offerings data' });
+  }
+});
 
-// GET to classes to fetch classes
+// GET to classes to fetch classes for a specific patient
 app.get('/classes/get', async(req, res) => {
   let name = req.body.name;
   
@@ -204,7 +217,7 @@ app.get('/classes/get', async(req, res) => {
 })
 
 
-// GET to appts to fetch appts
+// GET to appts to fetch appts 
 app.get('/appointments/get', async(req, res) => {
   let name = req.body.name;
   
