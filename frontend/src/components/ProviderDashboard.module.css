@@ -9,24 +9,24 @@
 }
 
 /* Form styles */
-form {
+.form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
 /* Label styles */
-label {
+.label {
   font-weight: bold;
   margin-bottom: 5px;
   color: rgb(111, 93, 77); /* Dark Brown for label text */
 }
 
 /* Input, textarea, and select styles */
-input[type="text"], 
-textarea, 
-select {
-  width: 100%; /* Make the inputs and text areas take full width */
+.input,
+.textarea,
+.select {
+  width: 100%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid rgb(111, 93, 77); /* Dark Brown for borders */
@@ -34,14 +34,13 @@ select {
   box-sizing: border-box;
 }
 
-/* Textarea styles for multiple lines */
-textarea {
+.textarea {
   min-height: 60px;
   resize: vertical;
 }
 
 /* Button styles */
-button {
+.button {
   background-color: rgb(154, 109, 99); /* Pink for button background */
   color: white;
   padding: 12px 20px;
@@ -60,14 +59,14 @@ button {
 }
 
 /* Align save & lab report button */
-button[type="submit"], 
-button[type="button"] {
+.button-submit, 
+.button-lab-report {
   width: 100%;
   margin-top: 10px;
 }
 
 /* Heading styles */
-h1, h2 {
+.heading {
   text-align: center;
   margin-bottom: 20px;
   color: rgb(111, 93, 77); /* Dark Brown for headings */
@@ -78,16 +77,16 @@ h1, h2 {
   margin-top: 30px;
 }
 
-/* making sure the form responsiveness on maybe mobile */
+/* Responsiveness */
 @media (max-width: 768px) {
   .container {
     width: 100%;
     padding: 10px;
   }
 
-  input[type="text"],
-  textarea,
-  select {
+  .input,
+  .textarea,
+  .select {
     width: 100%;
   }
 }

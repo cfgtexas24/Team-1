@@ -281,9 +281,10 @@ app.post('/appointments/get', async(req, res) => {
     }
 
     const data = doc.data().appointments;
+    console.log(data)
     const appointmentList = [];
-    data.forEach((appointment) => appointmentList.push({'time': appointment.time.toDate(), 'info': appointment.info}));
-    console.log(appointmentList[0].time);
+    data.forEach((appointment) => appointmentList.push({'date': appointment.date.toDate(), 'info': appointment.info}));
+    console.log(appointmentList[0].date);
     res.status(200).json(appointmentList);
   } catch (error) {
     console.error('Error fetching appointments:', error);
