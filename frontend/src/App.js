@@ -7,6 +7,8 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import PatientDashboard from './components/PatientDashboard';
 import AdminDashboard from './components/AdminDashboard'; // Import the AdminDashboard component
+import './AdminDashboard.css';
+
 
 function App() {
   return (
@@ -22,5 +24,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;

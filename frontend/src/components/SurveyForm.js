@@ -80,7 +80,10 @@ const SurveyForm = () => {
       <input
         type="text"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => {
+            setName(e.target.value);
+            localStorage.setItem("name", e.target.value); // Store name in localStorage
+          }}
       />
 
       <label>Age</label>
