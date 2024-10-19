@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #e7f0f1; /* Light blue background */
+  background-color: rgb(211, 227, 228); /* Light Blue/Grey background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +11,7 @@ body {
 
 .container {
   text-align: center;
-  background: white;
+  background: rgb(255, 255, 255); /* White background */
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -22,7 +22,7 @@ body {
 h1 {
   font-size: 2.5em;
   margin-bottom: 1em;
-  color: #2f4f4f;
+  color: rgb(111, 93, 77); /* Dark Brown */
 }
 
 .input-box {
@@ -30,13 +30,13 @@ h1 {
   padding: 12px;
   margin: 15px 0;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(154, 109, 99); /* Pink */
 }
 
 .submit-button {
   width: 100%;
   padding: 12px;
-  background-color: #2f4f4f;
+  background-color: rgb(111, 93, 77); /* Dark Brown */
   color: white;
   border: none;
   border-radius: 5px;
@@ -45,14 +45,14 @@ h1 {
 }
 
 .submit-button:hover {
-  background-color: #1e3a3a;
+  background-color: rgb(154, 109, 99); /* Pink */
 }
 
 /* Style for the "Already have an Account?" button */
 .link-button {
   background: none;
   border: none;
-  color: #2f4f4f;
+  color: rgb(111, 93, 77); /* Dark Brown */
   cursor: pointer;
   margin-top: 15px;
   text-decoration: underline;
@@ -60,5 +60,5 @@ h1 {
 }
 
 .link-button:hover {
-  color: #1e3a3a;
+  color: rgb(154, 109, 99); /* Pink */
 }

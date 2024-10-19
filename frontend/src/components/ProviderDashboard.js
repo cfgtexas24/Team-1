@@ -124,13 +124,13 @@ const ProviderDashboard = () => {
       </form>
 
       {/* Lab Reports Section */}
+
       <h2>Lab Reports</h2>
       <ul>
         {labReports.map((report, index) => (
           <li key={index}>{report}</li>
         ))}
       </ul>
-
       {/* Dropdown for Lab Type */}
       <label htmlFor="labType">Select Lab Report Type:</label>
       <select
@@ -152,7 +152,6 @@ const ProviderDashboard = () => {
         onChange={(e) => setLabResult(e.target.value)}
         placeholder="Enter lab result details here"
       />
-
       <button onClick={addLabReport}>Add Lab Report</button>
     </div>
   );
