@@ -61,9 +61,8 @@ const PatientDashboard = () => {
 
   return (
     <div className='flex flex-row w-screen h-screen'>
-      <div className="flex flex-col h-full w-1/4 bg-slate-700 justify-center items-center text-white">
-        <h1>Hello, <span><b> {patient.name}</b></span>
-      </h1>
+      <div className="flex flex-col h-screen w-1/4 bg-slate-700 justify-center items-center text-white">
+        <h1>Hello, <span><b> {patient.name}</b></span></h1>
         <ul className='flex flex-col gap-8'>
           <li><button onClick={() => scrollTo(notificationsRef)}>Notifications</button></li>
           <li><button onClick={() => scrollTo(labReportsRef)}>Lab Report</button></li>
@@ -71,34 +70,44 @@ const PatientDashboard = () => {
           <li><button onClick={() => scrollTo(calendarRef)}>Calendar</button></li>
         </ul>
       </div>
-      <div id="content" className="flex flex-col h-full w-full bg-gray-300 p-8">
-        <h2 ref={notificationsRef} className='font-bold text-xl'>Notifications</h2>
-        <h2 ref={labReportsRef} className='font-bold text-xl'>Your Latest lab reports:</h2>
-        <div className='flex flex-col'>
-          {labs.map(lab => (
-            <LabReport lab={lab} />
-          ))}
+      <div id="content" className="flex flex-col gap-12 h-screen w-full bg-gray-300 p-8">
+        <div>
+          <h2 ref={notificationsRef} className='font-bold text-xl'>Notifications</h2>
         </div>
-        <h2 ref={appointmentsRef} className='text-xl pt-8'>
-          You have an upcoming appointment at <span><b>{new Date(upcomingAppointments[0].date).toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZoneName: 'short'
-          })}</b></span> with the following information below
-        </h2>
-        <p>{upcomingAppointments[0].info}</p>
-        <h2 ref={labReportsRef} className='font-bold text-xl'>Calendar</h2>
-        <div className='flex flex-row'>
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <PatientCalendar
-              appointments={upcomingAppointments}
-              classes={classes}
-            />
+        <div>
+          <h2 ref={labReportsRef} className='font-bold text-xl'>Your Latest lab reports:</h2>
+          <div className='flex flex-col'>
+            {labs.map(lab => (
+              <LabReport lab={lab} />
+            ))}
           </div>
-
+        </div>
+        <div>
+          <h2 ref={appointmentsRef} className='text-xl pt-8'>
+            You have an upcoming appointment at <span><b>{new Date(upcomingAppointments[0].date).toLocaleString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZoneName: 'short'
+            })}</b></span> with the following information below
+          </h2>
+          <p>{upcomingAppointments[0].info}</p>
+        </div>
+        <div>
+          <h2 ref={labReportsRef} className='font-bold text-xl'>Calendar</h2>
+          <div className='flex flex-row gap-4'>
+            <div className="bg-white rounded-lg p-4 shadow-md">
+              <PatientCalendar
+                appointments={upcomingAppointments}
+                classes={classes}
+              />
+            </div>
+            <div className='bg-white rounded-lg p-4 shadow-md'>
+              
+            </div>
+          </div>
         </div>
       </div>
     </div>
