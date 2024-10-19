@@ -1,9 +1,9 @@
 import React from 'react'
 
-const login = () => {
+const Login = () => {
   return (
     <div>
-      <h1>Abide</h1>
+      <h1>Login</h1>
       <form>
         <input type="text" placeholder="Username" className="input-box" />
         <input type="password" placeholder="Password" className="input-box" />
@@ -14,4 +14,4 @@ const login = () => {
   )
 }
 
-export default login
+export default Login

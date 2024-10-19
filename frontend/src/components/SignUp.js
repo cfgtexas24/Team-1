@@ -1,9 +1,9 @@
 import React from 'react'
 
-const LoginExisting = () => {
+const SignUp = () => {
   return (
     <div>
-      <h1>Login Exisiting</h1>
+      <h1>SignUp</h1>
       <form>
         <input type="text" placeholder="Username" className="input-box" />
         <input type="password" placeholder="Password" className="input-box" />
@@ -14,4 +14,4 @@ const LoginExisting = () => {
   )
 }
 
-export default LoginExisting
+export default SignUp
