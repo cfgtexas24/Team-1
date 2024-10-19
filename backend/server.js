@@ -22,6 +22,30 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+const updateMedicalRecordField = async (req, res, field) => {
+  const name = req.body.name; // Get the patient's name (document ID)
+  const newValue = req.body.newValue; // The new value for the field
+
+  try {
+    const recordRef = db.collection('medicalRecords').doc(name);
+
+    // Get the patient's medical record document
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No medical records found for this patient' });
+    }
+
+    // Update the specific field with the new value
+    await recordRef.update({ [field]: newValue });
+
+    res.status(200).json({ message: `Field '${field}' updated successfully` });
+  } catch (error) {
+    console.error(`Error updating ${field}:`, error);
+    res.status(500).json({ error: `Error updating ${field}` });
+  }
+};
+
 // Route for testing server
 app.get('/', (req, res) => {
   res.send('Firebase Auth Server Running');
@@ -104,7 +128,7 @@ app.post('/patients/initial-form', async (req, res) => {
   }
   try {
     await db.collection('patients').doc(userID).set(patientInitialData);
-    await db.collection('medicalRecords').doc(userID).set({});
+    await db.collection('medicalRecords').doc(userID).set({"weight": 0, "bloodPressure": 0, "notes": "", "abdomenMeasurement": 0, "nutrition": "", "exercise": "", "prenatalTesting": "", "concerns": "", "emotionalWellBeing": "", "birthPlan": "" });
     await db.collection('appointments').doc(userID).set({"appointments": [""]});
     await db.collection('classes').doc(userID).set({"classes": [""]});
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
@@ -251,28 +275,88 @@ app.get('/patient/record', async (req, res) => {
   }
 });
 
-// POST to a specific patient's medical records
-// app.post('patient/record/update', async(req, res) => {
+// POST to a specific patient's blood pressure
+app.post('/patient/record/update/bloodPressure', (req, res) => {
+  updateMedicalRecordField(req, res, 'bloodPressure');
+});
+
+// Route to update nutrition
+app.post('/patient/record/update/nutrition', (req, res) => {
+  updateMedicalRecordField(req, res, 'nutrition');
+});
+
+// Route to update weight
+app.post('/patient/record/update/weight', (req, res) => {
+  updateMedicalRecordField(req, res, 'weight');
+});
+
+// Add similar routes for other fields like exercise, concerns, etc.
+app.post('/patient/record/update/exercise', (req, res) => {
+  updateMedicalRecordField(req, res, 'exercise');
+});
+
+app.post('/patient/record/update/birthPlan', (req, res) => {
+  updateMedicalRecordField(req, res, 'birthPlan');
+});
+
+app.post('/patient/record/update/abdomenMeasurement', (req, res) => {
+  updateMedicalRecordField(req, res, 'abdomenMeasurement');
+});
+
+app.post('/patient/record/update/concerns', (req, res) => {
+  updateMedicalRecordField(req, res, 'concerns');
+});
+
+app.post('/patient/record/update/emotionalWellBeing', (req, res) => {
+  updateMedicalRecordField(req, res, 'emotionalWellBeing');
+});
+
+app.post('/patient/record/update/notes', (req, res) => {
+  updateMedicalRecordField(req, res, 'notes');
+});
+
+app.post('/patient/record/update/prenatalTesting', (req, res) => {
+  updateMedicalRecordField(req, res, 'prenatalTesting');
+});
+
+
+
+// app.post('patient/record/update/bloodPressure', async(req, res) => {
 //   const name = req.body.name;
-//   const updatedFields = req.body;
-//   console.log(updatedFields)
+//   // const fieldToUpdate = req.params.field;
+//   const newValue = req.body.newValue;
+//   console.log(newValue);
 
-//   try {
-//     const recordRef = db.collection('medicalRecords').doc(name);
+  // Validate input
+  // if (!name || newValue === undefined || newValue === null) {
+  //   return res.status(400).json({ error: 'Name and new value for the field are required' });
+  // }
 
-//     const doc = await recordRef.get();
-//     if (!doc.exists) {
-//       return res.status(404).json({ message: 'No medical records found for this patient' });
-//     }
+  // try {
+  //   const recordRef = db.collection('medicalRecords').doc(name);
+    
+  //   // Check if the document exists
+  //   const doc = await recordRef.get();
+  //   if (!doc.exists) {
+  //     return res.status(404).json({ message: 'No medical records found for this patient' });
+  //   }
 
-//     await recordRef.update(updatedFields);
+  //   // Prepare update object dynamically
+  //   let updateData = {};
+  //   updateData[fieldToUpdate] = newValue;
 
-//     res.status(200).json({ message: 'Medical records updated successfully' });
-//   } catch (error) {
-//     console.error('Error updating patient records:', error);
-//     res.status(500).json({ error: 'Error updating records' });
-//   }
-// })
+  //   // Update the specified field in the document
+  //   await recordRef.update(updateData);
+
+  //   res.status(200).json({ message: `Field '${fieldToUpdate}' updated successfully` });
+  // } catch (error) {
+  //   console.error('Error updating patient records:', error);
+  //   res.status(500).json({ error: 'Error updating record' });
+  // }
+// });
+
+// ADMIN
+
 
 
 // Start the server
