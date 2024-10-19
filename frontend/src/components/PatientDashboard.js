@@ -1,6 +1,13 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 
+// todo:
+// list latest labs report
+// list latest appointment
+// form to request a new appointment
+// survey sent by provider
+// calendar of latest appointments
+// list latest services - can also show on the calendar
 
 const PatientDashboard = () => {
 
