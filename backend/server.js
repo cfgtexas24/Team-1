@@ -120,6 +120,7 @@ app.get('/patients', async (req, res) => {
   }
 });
 
+// fetch all patient records from provider
 app.get('/providers/patient-records', async (req, res) => {
   try {
     const providerSnapshot = await db.collection('providers').get();
