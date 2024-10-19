@@ -39,8 +39,6 @@ const updateMedicalRecordField = async (req, res, field, newValue) => {
 
     // Update the specific field with the new value
     await recordRef.update({ [field]: newValue });
-
-    res.status(200).json({ message: `Field '${field}' updated successfully` });
   } catch (error) {
     console.error(`Error updating ${field}:`, error);
     res.status(500).json({ error: `Error updating ${field}` });
@@ -379,10 +377,13 @@ app.get('/patient/record', async (req, res) => {
 app.post('/patient/record/update', (req, res) => {
   const body = req.body;
   console.log(body);
-  const field = Object.keys(body)[1];
-  console.log(field);
-  console.log(body[field]);
-  updateMedicalRecordField(req, res, field, body[field]);
+  const fields = Object.keys(body);
+  fields.shift();
+  console.log(fields);
+  fields.forEach((field) => {
+    updateMedicalRecordField(req, res, field, body[field]);
+  });
+  res.status(200).json({ message: `Fields updated successfully` });
 });
 
 // Add Patient Lab Report
