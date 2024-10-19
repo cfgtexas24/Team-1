@@ -137,10 +137,18 @@ app.post('/patient/class-sign-up', async (req, res) => {
     // Update to decrement the openings
     const data = doc.data();
     const openings = data.openings;
+    const dateTime = data.time.toDate();
+    console.log("dateTime", dateTime);
+    const currentDateTime = new Date();
+    console.log("currentDateTime", currentDateTime);
+
+    if(dateTime < currentDateTime) {
+      return res.status(400).json({ error: 'The sign-up period for this class has ended' });
+    }
     
     // Error for no openings
     if(openings-1 < 0) {
-      return res.status(500).json({ error: 'No openings available' });
+      return res.status(400).json({ error: 'No openings available' });
     }
 
     // Update classes for the specific patient
@@ -151,12 +159,18 @@ app.post('/patient/class-sign-up', async (req, res) => {
       return res.status(404).json({ error: 'Patient does not exist' });
     }
 
+    const dataPatientClasses = docPatientClasses.data();
+    const classesList = dataPatientClasses.classes || [];
+
+    // Already signed up
+    if(classesList.includes(className)) {
+      return res.status(400).json({ error: 'Already signed up for this class' });
+    }
+
     // Decrement openings now that we know class and patient are both valid
     await recordRef.update({ openings: openings-1 });
 
     // Update to add the class
-    const dataPatientClasses = docPatientClasses.data();
-    const classesList = dataPatientClasses.classes || [];
     classesList.push(className);
     await recordRefPatientClasses.update({ classes: classesList });
 
