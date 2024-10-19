@@ -8,7 +8,7 @@ import PatientDashboard from './components/PatientDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
 import AdminDashboard from './components/AdminDashboard'; // Import the AdminDashboard component
 import PatientList from './components/PatientList'; //up
-import './AdminDashboard.css';
+import './components/AdminDashboard.css';
 import SurveyForm from './components/SurveyForm';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/patient/login" element={<Login />} />
-        <Route path="/patient/home" element={<PatientDashboard />} />
+        <Route path="/patient/dashboard" element={<PatientDashboard />} />
         {/* Standalone Admin Dashboard Route */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/patient-list" element={<PatientList />} />
