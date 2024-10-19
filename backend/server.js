@@ -261,13 +261,11 @@ app.get('/appointments/get', async(req, res) => {
       return res.status(404).json({ message: 'No appointments found for this patient' });
     }
 
-    const data = doc.data();
-    const apptDate = data.time.toDate();
-    const dictionary = {};
-    dictionary['time'] = apptDate;
-    dictionary['info'] = data.info;
+    const data = doc.data().appointments;
+    const appointmentList = [];
+    data.forEach((appointment) => appointmentList.push(appointment));
 
-    res.status(200).json(dictionary);
+    res.status(200).json(appointmentList);
   } catch (error) {
     console.error('Error fetching appointments:', error);
     res.status(500).json({ error: 'Error fetching appointments' });
