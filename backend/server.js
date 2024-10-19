@@ -402,6 +402,71 @@ app.get('/admin/birthComplications', async (req, res) => {
   }
 });
 
+// GET filtered search
+app.get('/admin/filter', async (req, res) => {
+  try {
+    const name = req.body.name;
+    const age = req.body.age;
+    const race = req.body.race;
+    const primaryLanguage = req.body.primaryLanguage;
+    const zipCode = req.body.zipCode;
+
+    console.log(name);
+    const patientsSnapshot = await db.collection('patients').get();
+
+    if (patientsSnapshot.empty) {
+      return res.status(200).json({ matches: [] });
+    }
+
+    const matches = [];
+
+    for (const patientDoc of patientsSnapshot.docs) {
+      const patientData = patientDoc.data();
+      console.log(patientData.zipCode);
+
+      const matchesDemographics =
+        (patientData.name === String(name)) &&
+        (patientData.age === Number(age)) &&
+        (patientData.race === String(race)) &&
+        (patientData.primaryLanguage === String(primaryLanguage));
+        // (patientData.zipCode === Number(zipCode));
+
+      if (matchesDemographics) {
+        console.log(patientData);
+        matches.push(patientData);
+      }
+
+      // const matchesDemographics =
+      //   (!name || patientData.name === String(name)) &&
+      //   (!age || patientData.age === Number(age)) &&
+      //   (!gender || patientData.gender === String(gender)) &&
+      //   (!race || patientData.race === race) &&
+      //   (!primaryLanguage || patientData.primaryLanguage === primaryLanguage) &&
+      //   (!zipCode || patientData.zip-code === zipCode);
+      
+      // if (matchesDemographics) {
+      //   matches.push(patientData);
+      // }
+    }
+
+    res.status(200).json({ matches });
+
+    //   const medicalRecordsRef = db.collection('medicalRecords').doc(patientDoc.name);
+    //   const medicalDoc = await medicalRecordsRef.get();
+
+    //   if (!medicalDoc.exists) {
+    //     continue;
+    //   }
+
+    //   const medicalData = medicalDoc.data();
+    //   if (birthOutcome && medicalData.successfulBirth !== )
+    // }
+  } catch (error) {
+    console.error('Error filtering records:', error);
+    res.status(500).json({ error: 'Error filtering records '});
+  }
+});
+
 
 // Start the server
 const port = 8008;
