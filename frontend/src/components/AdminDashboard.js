@@ -41,7 +41,7 @@ const AdminDashboard = () => {
   return (
     <div>
       <h1>Admin Dashboard</h1>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="105%" height={400}>
         <BarChart
           data={patientData}
           margin={{
