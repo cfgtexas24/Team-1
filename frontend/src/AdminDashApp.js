@@ -1,22 +1,37 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import SurveyForm from "./SurveyApp";
-import AdminDashboard from "./AdminDashboard"; 
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-function App() {
-  const isAdmin = true; // Replace this with actual authentication check
+const GeocodeZipCodes = ({ zipCodes }) => {
+  const [coordinates, setCoordinates] = useState([]);
+
+  useEffect(() => {
+    const getCoordinates = async () => {
+      const coords = [];
+      for (const zip of zipCodes) {
+        try {
+          const response = await axios.get(
+            `https://api.opencagedata.com/geocode/v1/json?q=${zip}&key=`
+          );
+          const { lat, lng } = response.data.results[0].geometry;
+          coords.push({ lat, lng });
+        } catch (error) {
+          console.error("Error fetching geolocation for zip code:", zip, error);
+        }
+      }
+      setCoordinates(coords);
+    };
+    getCoordinates();
+  }, [zipCodes]);
 
   return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={SurveyForm} />
-        <Route
-          path="/admin"
-          render={() => (isAdmin ? <AdminDashboard /> : <Redirect to="/" />)}
-        />
-      </Switch>
-    </Router>
+    <div>
+      <h1>Coordinates</h1>
+      {coordinates.map((coord, index) => (
+        <p key={index}>{`Lat: ${coord.lat}, Lng: ${coord.lng}`}</p>
+      ))}
+      {/* Use the coordinates in a heatmap component here */}
+    </div>
   );
-}
+};
 
-export default App;
+export default GeocodeZipCodes;
