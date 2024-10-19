@@ -190,9 +190,14 @@ app.get('/classes/offered', async (req, res) => {
     const snapshot = await db.collection('class_offerings').get();
     snapshot.docs.forEach(doc => {
       const data = doc.data();
+      console.log(data)
+      
+      // convert date from nasty Firebase format to ISO
+      const normalizedData = {...doc.data(), date: data.time.toDate()}
+
       const currentDateTime = new Date();
       if(data.time.toDate() > currentDateTime) {
-        dictionary[doc.id] = data;
+        dictionary[doc.id] = normalizedData;
       }
     });
     res.status(200).json(dictionary);
