@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from './components/Home';
 import Login from'./components/Login';
+import LoginExisting from './components/LoginExistingUser'
 import PatientDashboard from './components/PatientDashboard';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/patient/login" element={<Login />} />
         <Route path="/patient/home" element={<PatientDashboard />}/>
+        <Route path="/patient/login/existing" element={<LoginExisting />} />
       </Routes>
 
     </BrowserRouter>
