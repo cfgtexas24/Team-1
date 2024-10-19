@@ -1,0 +1,78 @@
+.dashboard-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+  color: #2d3436;
+  text-align: center;
+}
+
+.toggle-button {
+  display: block;
+  margin: 0 auto 20px auto;
+  padding: 10px 20px;
+  background-color: #00b894;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  background-color: #019973;
+}
+
+.filter-section {
+  padding: 20px;
+  border: 1px solid #dfe6e9;
+  margin-bottom: 30px;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* This aligns checkboxes across */
+  padding: 10px;
+  border: 1px solid #dfe6e9;
+  background-color: #f5f6fa;
+  max-width: 600px; /* You can adjust the width as per your design */
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.checkbox-item {
+  width: 150px; /* Each checkbox and label will fit in this space */
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.table-section {
+  margin-top: 20px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.styled-table th, .styled-table td {
+  padding: 12px 15px;
+  border: 1px solid #dfe6e9;
+  text-align: left;
+}
+
+.styled-table th {
+  background-color: #00b894;
+  color: white;
+}
+
+.chart-section {
+  margin-top: 50px;
+}
+
+.chart-container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 800px;
+}
