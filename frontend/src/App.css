@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #e7f0f1; /* Light blue background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 400px;
+  max-width: 90%;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 1em;
+  color: #2f4f4f;
+}
+
+.input-box {
+  width: 100%;
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2f4f4f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #1e3a3a;
+}
+
+/* Style for the "Already have an Account?" button */
+.link-button {
+  background: none;
+  border: none;
+  color: #2f4f4f;
+  cursor: pointer;
+  margin-top: 15px;
+  text-decoration: underline;
+  font-size: 0.9em;
+}
+
+.link-button:hover {
+  color: #1e3a3a;
+}
