@@ -53,7 +53,6 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
     {
       date: '2024-11-12T20:10:45.000Z',
       title: 'Pre-natal Education Class',
-      info: 'info about the class'
     }
   ])
 
@@ -61,7 +60,6 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
     {
       date: '2024-10-12T20:10:45.000Z',
       title: 'Pre-natal Education Class',
-      info: 'info about the class'
     }
   ])
 
@@ -76,8 +74,31 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
   // get appointments of patient      GET /appointments/get
   // get currently signed up classes  GET /classes/get
   // get available classes to attend  GET /classes/offered
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await fetch('http://localhost:8008/appointments/get', {
+        method: 'POST', // or 'PUT', 'PATCH', etc.
+        headers: {
+          'Content-Type': 'application/json', // specify the content type
+        },
+        body: JSON.stringify({"name":"Jane Doe"}), // convert the data to a JSON string
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setUpcomingAppointments(data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
+
+
   useEffect(() => {
     // sort all events (classes and appointments) by date 
+    fetchAppointments()
+
     const combined = [
       ...classes.map(c => ({ ...c, type: 'class' })),
       ...upcomingAppointments.map(a => ({ ...a, type: 'appointment' }))
@@ -132,7 +153,7 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
                 classes={classes}
               />
             </div>
-            <div className='bg-white rounded-lg p-4 shadow-md w-full'>
+            {/* <div className='bg-white rounded-lg p-4 shadow-md w-full'>
               <h2 className="mb-4"><b>Scheduled Events</b></h2>
               {allEvents.map(event => (
                 <div className={event.type === 'class' ? 'text-blue-500' : event.type === 'appointment' ? 'text-green-500' : ''}>
@@ -148,8 +169,8 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
                   </p>
                 </div>
               ))}
-            </div>
-            <div className='bg-white rounded-lg p-4 shadow-md w-full'>
+            </div> */}
+            {/* <div className='bg-white rounded-lg p-4 shadow-md w-full'>
               <div>
 
               </div>
@@ -167,12 +188,12 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
                       hour12: true
                     })}
                     </p>
-                    <p className='mb-4'>{availableClass.info}</p>
+                    <p className='mb-4'>{availableClass}</p>
                   </div>
                   <button className='w-18'>Sign Up</button>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
