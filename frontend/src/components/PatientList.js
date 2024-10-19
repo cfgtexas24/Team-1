@@ -19,9 +19,10 @@ const PatientList = () => {
   }, []);
 
   // Filter the patients based on the search query
-  const filteredPatients = patients.filter((patient) =>
-    patient.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredPatients = patients.filter((patient) => {
+    const patientName = patient.name || patient.username || ''; // Fallback to username if name is not available
+    return patientName.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div>
@@ -46,12 +47,12 @@ const PatientList = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredPatients.map((patient) => (
-            <tr key={patient.id}>
-              <td>{patient.name}</td>
+          {filteredPatients.map((patient, index) => (
+            <tr key={index}> {/* Using index as a key if no unique ID is available */}
+              <td>{patient.name || patient.username}</td> {/* Display username if name is not available */}
               <td>{patient.age}</td>
               <td>
-                <Link to={`/provider-dashboard/${patient.id}`}>View Medical Record</Link>
+                <Link to={`/provider-dashboard/${patient.name || patient.username}`}>View Medical Record</Link>
               </td>
             </tr>
           ))}
