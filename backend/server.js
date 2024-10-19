@@ -64,27 +64,6 @@ app.post('/verify-token', async (req, res) => {
   }
 });
 
-// PATIENTS
-// Fetch patient data by ID
-app.get('/patients/:id', async (req, res) => {
-    const patientId = req.params.id;
-    
-    try {
-      const patientRef = db.collection('patients').doc(patientId);
-      const doc = await patientRef.get();
-      
-      if (!doc.exists) {
-        return res.status(404).json({ message: 'Patient not found' });
-      }
-  
-      const patientData = doc.data();
-      res.json(patientData);
-    } catch (error) {
-      console.error('Error fetching patient data:', error);
-      res.status(500).json({ error: 'Error fetching patient data' });
-    }
-});
-
 // Update patient data by ID
 app.put('/patients/:id', async (req, res) => {
     const patientId = req.params.id;
@@ -208,33 +187,25 @@ app.get('/appointments/get', async(req, res) => {
 })
 
 // Patient View Information
-
-// Specific Patient Medical Records
-app.get('/patients/medical-records', async (req, res) => {
-  let username = {};
+app.get('/patients/demographics', async (req, res) => {
+  let name = "";
   try {
-    username = req.body;
-    console.log(username);
+    name = req.body.name;
+    console.log(name);
   } catch(error) {
     console.error('Error fetching patients username:', error);
     res.status(500).json({ error: 'Error patients username' });
   }
   try {
-    const userID = await db.collection('patients').get();
-    //const labReports = await db.collection('medicalRecords').get();
-    //const patients = snapshot.docs.map(doc => doc.data());
+    const recordRef = db.collection('patients').doc(name);
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No demographic data found for this patient' });
+    }
+
+    res.json(doc.data());
   
-    res.status(200).json(userID);
-  } catch(error) {
-    console.error('Error fetching data from database:', error);
-    res.status(500).json({ error: 'Error fetching data from database' });
-  }
-});
-
-// Patient Lab Report
-app.get('/patient/lab-report', async (req, res) => {
-  try{
-
   } catch(error) {
     console.error('Error fetching data from database:', error);
     res.status(500).json({ error: 'Error fetching data from database' });
