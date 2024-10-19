@@ -41,23 +41,53 @@ const PatientDashboard = () => {
   // upcoming appointment information
   const [upcomingAppointments, setUpcomingAppointments] = useState([
     {
-      date: '2024-10-25T20:10:45.000Z',
+      date: '2024-11-25T20:10:45.000Z',
+      info: 'appointment info goes here'
+    },
+    {
+      date: '2024-09-03T20:10:45.000Z',
       info: 'appointment info goes here'
     }
+
   ])
 
   const [classes, setClasses] = useState([
     {
-      date: '2024-10-25T20:10:45.000Z',
-      info: 'classes'
+      date: '2024-11-12T20:10:45.000Z',
+      title: 'Pre-natal Education Class',
+      info: 'info about the class'
     }
-
   ])
+
+  const [availableClasses, setAvailableClasses] = useState([
+    {
+      date: '2024-10-12T20:10:45.000Z',
+      title: 'Pre-natal Education Class',
+      info: 'info about the class'
+    }
+  ])
+
+  const [allEvents, setAllEvents] = useState([])
 
   const [surveyQuestion, setSurveyQuestion] = useState('');
   const [surveyAnswer, setSurveryAnswer] = useState('');
 
-  // useEffect();
+  // for useEffect()
+  // requests:
+  // get patient demographic data
+  // get appointments of patient
+  // get currently signed up classes
+  // get available classes to attend
+  useEffect(() => {
+    // sort all events (classes and appointments) by date 
+    const combined = [
+      ...classes.map(c => ({ ...c, type: 'class' })),
+      ...upcomingAppointments.map(a => ({ ...a, type: 'appointment' }))
+    ];
+    const sortedCombined = combined.sort((a, b) => new Date(a.date) - new Date(b.date))
+    console.log(sortedCombined)
+    setAllEvents(sortedCombined)
+  }, []);
 
   return (
     <div className='flex flex-row w-screen h-screen'>
@@ -104,8 +134,46 @@ const PatientDashboard = () => {
                 classes={classes}
               />
             </div>
-            <div className='bg-white rounded-lg p-4 shadow-md'>
-              
+            <div className='bg-white rounded-lg p-4 shadow-md w-full'>
+              <h2 className="mb-4"><b>Scheduled Events</b></h2>
+              {allEvents.map(event => (
+                <div className={event.type === 'class' ? 'text-blue-500' : event.type === 'appointment' ? 'text-green-500' : ''}>
+                  <h2><b>{event.type === 'class' ? event.title : 'Appointment'}</b></h2>
+                  <p className='mb-4'>{new Date(event.date).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                  })}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className='bg-white rounded-lg p-4 shadow-md w-full'>
+              <div>
+
+              </div>
+              <h2 className="mb-4"><b>Available Classes</b></h2>
+              {availableClasses.map(availableClass => (
+                <div className='flex flex-row'>
+                  <div className='w-full'>
+                    <h2><b>{availableClass.title}</b></h2>
+                    <p>{new Date(availableClass.date).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      hour12: true
+                    })}
+                    </p>
+                    <p className='mb-4'>{availableClass.info}</p>
+                  </div>
+                  <button className='w-18'>Sign Up</button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
