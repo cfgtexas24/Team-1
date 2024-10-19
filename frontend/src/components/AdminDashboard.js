@@ -51,7 +51,7 @@ const AdminDashboard = () => {
     try {
       // Build the query parameters string based on filters
       const queryParams = new URLSearchParams(filters).toString();
-      console.log("Query Params:", queryParams);
+  console.log("Query Params:", queryParams);
       const response = await fetch(`http://localhost:8008/admin/filter?${queryParams}`);
       if (response.ok) {
         const data = await response.json();
@@ -82,10 +82,12 @@ const AdminDashboard = () => {
   ];
 
   const raceData = [
-    { name: 'White', value: 400 },
-    { name: 'Black', value: 300 },
-    { name: 'Asian', value: 300 },
+    { name: 'Caucasian', value: 400 },
+    { name: 'Middle Eastern', value: 300 },
+    { name: 'African American', value: 300 },
+    { name: 'Asian / Pacific Islander', value: 300 },
     { name: 'Hispanic', value: 200 },
+    { name: 'Native American', value: 200 },
     { name: 'Other', value: 100 },
   ];
 
@@ -270,7 +272,7 @@ const AdminDashboard = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="count" fill="#FF77A9" />
+                  <Bar dataKey="count" fill="#B19CD9" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -284,7 +286,7 @@ const AdminDashboard = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="count" fill="#FF77A9" />
+                  <Bar dataKey="count" fill="#FFB347" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -298,7 +300,7 @@ const AdminDashboard = () => {
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="count" fill="#FF77A9" />
+                  <Bar dataKey="count" fill="#20B2AA" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
