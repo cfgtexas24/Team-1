@@ -21,6 +21,7 @@ function App() {
         {/* Standalone Admin Dashboard Route */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/provider-dashboard" element={<ProviderDashboard />} />
+        <Route path="/patient-dashboard" element={<PatientDashboard />} />
         <Route path="/survey-form" element={<SurveyForm />} />
 
       </Routes>

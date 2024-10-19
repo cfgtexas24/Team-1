@@ -22,9 +22,9 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const updateMedicalRecordField = async (req, res, field) => {
+const updateMedicalRecordField = async (req, res, field, newValue) => {
   const name = req.body.name; // Get the patient's name (document ID)
-  const newValue = req.body.newValue; // The new value for the field
+  //const newValue = req.body.newValue; // The new value for the field
 
   try {
     const recordRef = db.collection('medicalRecords').doc(name);
@@ -62,27 +62,6 @@ app.post('/verify-token', async (req, res) => {
     console.error('Error verifying token:', error);
     res.status(401).json({ error: 'Invalid token' });
   }
-});
-
-// PATIENTS
-// Fetch patient data by ID
-app.get('/patients/:id', async (req, res) => {
-    const patientId = req.params.id;
-    
-    try {
-      const patientRef = db.collection('patients').doc(patientId);
-      const doc = await patientRef.get();
-      
-      if (!doc.exists) {
-        return res.status(404).json({ message: 'Patient not found' });
-      }
-  
-      const patientData = doc.data();
-      res.json(patientData);
-    } catch (error) {
-      console.error('Error fetching patient data:', error);
-      res.status(500).json({ error: 'Error fetching patient data' });
-    }
 });
 
 // Update patient data by ID
@@ -195,12 +174,18 @@ app.get('/appointments/get', async(req, res) => {
   try {
     const apptsRef = db.collection('appointments').doc(name);
     const doc = await apptsRef.get();
+    console.log(doc.data())
+
+    // convert date from nasty Firebase format to ISO
+    const milliseconds = doc.data().date.seconds * 1000 + Math.floor(doc.data().date.nanoseconds / 1000);
+    const isoDateString = new Date(milliseconds).toISOString();
+    const normalizedData = {...doc.data(), date: isoDateString}
 
     if (!doc.exists) {
       return res.status(404).json({ message: 'No appointments found for this patient' });
     }
 
-    res.json(doc.data());
+    res.json(normalizedData);
   } catch (error) {
     console.error('Error fetching appointments:', error);
     res.status(500).json({ error: 'Error fetching appointments' });
@@ -208,38 +193,30 @@ app.get('/appointments/get', async(req, res) => {
 })
 
 // Patient View Information
-
-// Specific Patient Medical Records
-app.get('/patients/medical-records', async (req, res) => {
-  let username = {};
+app.get('/patients/demographics', async (req, res) => {
+  let name = "";
   try {
-    username = req.body;
-    console.log(username);
+    name = req.body.name;
+    console.log(name);
   } catch(error) {
     console.error('Error fetching patients username:', error);
     res.status(500).json({ error: 'Error patients username' });
   }
   try {
-    const userID = await db.collection('patients').get();
-    //const labReports = await db.collection('medicalRecords').get();
-    //const patients = snapshot.docs.map(doc => doc.data());
+    const recordRef = db.collection('patients').doc(name);
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No demographic data found for this patient' });
+    }
+
+    res.json(doc.data());
   
-    res.status(200).json(userID);
   } catch(error) {
     console.error('Error fetching data from database:', error);
     res.status(500).json({ error: 'Error fetching data from database' });
   }
 });
-
-// Patient Lab Report
-// app.get('/patient/lab-report', async (req, res) => {
-//   try{
-
-//   } catch(error) {
-//     console.error('Error fetching data from database:', error);
-//     res.status(500).json({ error: 'Error fetching data from database' });
-//   }
-// });
 
 // PROVIDERS
 // Get all patients data
@@ -276,59 +253,16 @@ app.get('/patient/record', async (req, res) => {
 });
 
 // POST to a specific patient's blood pressure
-app.post('/patient/record/update/bloodPressure', (req, res) => {
+/*app.post('/patient/record/update/bloodPressure', (req, res) => {
   updateMedicalRecordField(req, res, 'bloodPressure');
-});
-
-// Route to update nutrition
-app.post('/patient/record/update/nutrition', (req, res) => {
-  updateMedicalRecordField(req, res, 'nutrition');
-});
-
-// Route to update weight
-app.post('/patient/record/update/weight', (req, res) => {
-  updateMedicalRecordField(req, res, 'weight');
-});
-
-// Add similar routes for other fields like exercise, concerns, etc.
-app.post('/patient/record/update/exercise', (req, res) => {
-  updateMedicalRecordField(req, res, 'exercise');
-});
-
-app.post('/patient/record/update/birthPlan', (req, res) => {
-  updateMedicalRecordField(req, res, 'birthPlan');
-});
-
-app.post('/patient/record/update/abdomenMeasurement', (req, res) => {
-  updateMedicalRecordField(req, res, 'abdomenMeasurement');
-});
-
-app.post('/patient/record/update/concerns', (req, res) => {
-  updateMedicalRecordField(req, res, 'concerns');
-});
-
-app.post('/patient/record/update/emotionalWellBeing', (req, res) => {
-  updateMedicalRecordField(req, res, 'emotionalWellBeing');
-});
-
-app.post('/patient/record/update/notes', (req, res) => {
-  updateMedicalRecordField(req, res, 'notes');
-});
-
-app.post('/patient/record/update/prenatalTesting', (req, res) => {
-  updateMedicalRecordField(req, res, 'prenatalTesting');
-});
-
-app.post('/patient/record/update/successfulBirth', (req, res) => {
-  updateMedicalRecordField(req, res, 'successfulBirth');
-});
-
-app.post('/patient/record/update/birthComplications', (req, res) => {
-  updateMedicalRecordField(req, res, 'birthComplications');
-});
-
-app.post('/patient/record/update/servicesAccessed', (req, res) => {
-  updateMedicalRecordField(req, res, 'servicesAccessed');
+});*/
+app.post('/patient/record/update', (req, res) => {
+  const body = req.body;
+  console.log(body);
+  const field = Object.keys(body)[1];
+  console.log(field);
+  console.log(body[field]);
+  updateMedicalRecordField(req, res, field, body[field]);
 });
 
 
