@@ -107,7 +107,7 @@ app.post('/patients/initial-form', async (req, res) => {
   }
   try {
     await db.collection('patients').doc(userID).set(patientInitialData);
-    await db.collection('medicalRecords').doc(userID).set({"weight": 0, "bloodPressure": 0, "notes": "", "abdomenMeasurement": 0, "nutrition": "", "exercise": "", "prenatalTesting": "", "concerns": "", "emotionalWellBeing": "", "birthPlan": "" });
+    await db.collection('medicalRecords').doc(userID).set({"weight": 0, "bloodPressure": 0, "notes": "", "abdomenMeasurement": 0, "nutrition": "", "exercise": "", "prenatalTesting": "", "concerns": "", "emotionalWellBeing": "", "birthPlan": "" , "successfulBirth": "", "birthComplications": "", "servicesAccessed": ""});
     await db.collection('appointments').doc(userID).set({"appointments": [""]});
     await db.collection('classes').doc(userID).set({"classes": [""]});
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
@@ -252,10 +252,7 @@ app.get('/patient/record', async (req, res) => {
   }
 });
 
-// POST to a specific patient's blood pressure
-/*app.post('/patient/record/update/bloodPressure', (req, res) => {
-  updateMedicalRecordField(req, res, 'bloodPressure');
-});*/
+// Update Patient Record
 app.post('/patient/record/update', (req, res) => {
   const body = req.body;
   console.log(body);
@@ -265,6 +262,36 @@ app.post('/patient/record/update', (req, res) => {
   updateMedicalRecordField(req, res, field, body[field]);
 });
 
+// Add Patient Lab Report
+app.post('/patient/lab-report/add', async (req, res) => {
+  const body = req.body;
+  const name = body.name;
+  const newReport = body.newReport;
+  console.log(newReport);
+
+  
+  try {
+    const recordRef = db.collection('medicalRecords').doc(name);
+
+    // Get the patient's medical record document
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No medical records found for this patient' });
+    }
+
+    // Update the specific field with the new report
+    const data = doc.data();
+    const currentReportsList = data.reports || [];
+    currentReportsList.push(newReport);
+    await recordRef.update({ reports: currentReportsList });
+
+    res.status(200).json({ message: `Report added successfully` });
+  } catch (error) {
+    console.error(`Error adding ${newReport}:`, error);
+    res.status(500).json({ error: `Error adding report` });
+  }
+});
 
 // app.post('patient/record/update/bloodPressure', async(req, res) => {
 //   const name = req.body.name;
@@ -300,8 +327,122 @@ app.post('/patient/record/update', (req, res) => {
   // }
 // });
 
-// ADMIN
 
+// ADMIN
+// GET successful birth count
+app.get('/admin/successfulBirths', async (req, res) => {
+  try {
+    const snapshot = await db.collection('medicalRecords').where('successfulBirth', '==', true).get();
+
+    if (snapshot.empty) {
+      return res.status(200).json({ successfulBirthCount: 0});
+    }
+
+    const successfulBirthCount = snapshot.size;
+
+    res.status(200).json({ successfulBirthCount });
+  } catch (error) {
+    console.error('Error counting successful births:', error);
+    res.status(500).json({ error: 'Error counting successful births' });
+  }
+});
+
+// GET birth complications
+app.get('/admin/birthComplications', async (req, res) => {
+  try {
+    // Fetch all documents in the 'medicalRecords' collection
+    const snapshot = await db.collection('medicalRecords').get();
+
+    if (snapshot.empty) {
+      return res.status(200).json({ birthComplications: [] });
+    }
+
+    // Initialize an array to store birth complications
+    const birthComplications = [];
+
+    // Iterate through the documents
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      // Check if birthComplications field exists and is not an empty string
+      if (data.birthComplications && data.birthComplications.trim() !== '') {
+        birthComplications.push(data.birthComplications);
+      }
+    });
+
+    // Return the array of birth complications
+    res.status(200).json({ birthComplications });
+
+  } catch (error) {
+    console.error('Error fetching birth complications:', error);
+    res.status(500).json({ error: 'Error fetching birth complications' });
+  }
+});
+
+// GET filtered search
+app.get('/admin/filter', async (req, res) => {
+  try {
+    const name = req.body.name;
+    const age = req.body.age;
+    const race = req.body.race;
+    const primaryLanguage = req.body.primaryLanguage;
+    const zipCode = req.body.zipCode;
+
+    console.log(name);
+    const patientsSnapshot = await db.collection('patients').get();
+
+    if (patientsSnapshot.empty) {
+      return res.status(200).json({ matches: [] });
+    }
+
+    const matches = [];
+
+    for (const patientDoc of patientsSnapshot.docs) {
+      const patientData = patientDoc.data();
+      console.log(patientData.zipCode);
+
+      const matchesDemographics =
+        (patientData.name === String(name)) &&
+        (patientData.age === Number(age)) &&
+        (patientData.race === String(race)) &&
+        (patientData.primaryLanguage === String(primaryLanguage));
+        // (patientData.zipCode === Number(zipCode));
+
+      if (matchesDemographics) {
+        console.log(patientData);
+        matches.push(patientData);
+      }
+
+      // const matchesDemographics =
+      //   (!name || patientData.name === String(name)) &&
+      //   (!age || patientData.age === Number(age)) &&
+      //   (!gender || patientData.gender === String(gender)) &&
+      //   (!race || patientData.race === race) &&
+      //   (!primaryLanguage || patientData.primaryLanguage === primaryLanguage) &&
+      //   (!zipCode || patientData.zip-code === zipCode);
+      
+      // if (matchesDemographics) {
+      //   matches.push(patientData);
+      // }
+    }
+
+    res.status(200).json({ matches });
+
+    //   const medicalRecordsRef = db.collection('medicalRecords').doc(patientDoc.name);
+    //   const medicalDoc = await medicalRecordsRef.get();
+
+    //   if (!medicalDoc.exists) {
+    //     continue;
+    //   }
+
+    //   const medicalData = medicalDoc.data();
+    //   if (birthOutcome && medicalData.successfulBirth !== )
+    // }
+  } catch (error) {
+    console.error('Error filtering records:', error);
+    res.status(500).json({ error: 'Error filtering records '});
+  }
+});
 
 
 // Start the server
