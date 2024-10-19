@@ -252,10 +252,7 @@ app.get('/patient/record', async (req, res) => {
   }
 });
 
-// POST to a specific patient's blood pressure
-/*app.post('/patient/record/update/bloodPressure', (req, res) => {
-  updateMedicalRecordField(req, res, 'bloodPressure');
-});*/
+// Update Patient Record
 app.post('/patient/record/update', (req, res) => {
   const body = req.body;
   console.log(body);
@@ -265,6 +262,36 @@ app.post('/patient/record/update', (req, res) => {
   updateMedicalRecordField(req, res, field, body[field]);
 });
 
+// Add Patient Lab Report
+app.post('/patient/lab-report/add', async (req, res) => {
+  const body = req.body;
+  const name = body.name;
+  const newReport = body.newReport;
+  console.log(newReport);
+
+  
+  try {
+    const recordRef = db.collection('medicalRecords').doc(name);
+
+    // Get the patient's medical record document
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No medical records found for this patient' });
+    }
+
+    // Update the specific field with the new report
+    const data = doc.data();
+    const currentReportsList = data.reports || [];
+    currentReportsList.push(newReport);
+    await recordRef.update({ reports: currentReportsList });
+
+    res.status(200).json({ message: `Report added successfully` });
+  } catch (error) {
+    console.error(`Error adding ${newReport}:`, error);
+    res.status(500).json({ error: `Error adding report` });
+  }
+});
 
 // app.post('patient/record/update/bloodPressure', async(req, res) => {
 //   const name = req.body.name;
@@ -301,8 +328,6 @@ app.post('/patient/record/update', (req, res) => {
 // });
 
 // ADMIN
-
-
 
 // Start the server
 const port = 8008;
