@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import './SurveyForm.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SurveyForm = () => {
   // Initialize state for each question
@@ -23,9 +23,12 @@ const SurveyForm = () => {
   const [unhoused, setUnhoused] = useState("");
   const [foodStamps, setFoodStamps] = useState("");
 
+  const navigate = useNavigate();
+
   // Submit handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     // Create an object with the survey data
     const surveyData = {
@@ -49,58 +52,65 @@ const SurveyForm = () => {
     };
 
     try {
-      // Send data to the backend using fetch
-      const response = await fetch("/patient-initial-form", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(surveyData),
-      });
-
-      if (response.ok) {
-        console.log("Survey submitted successfully!");
-      } else {
-        console.log("Error submitting the survey");
+        // Send data to the backend using fetch
+        const response = await fetch("/patient-initial-form", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(surveyData),
+        });
+  
+        if (response.ok) {
+          console.log("Survey submitted successfully!");
+          navigate("/patient-dashboard"); // Navigate to the patient dashboard
+        } else {
+          console.log("Error submitting the survey");
+        }
+      } catch (error) {
+        console.error("Error:", error);
       }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+    };
 
   return (
-    <form onSubmit={handleSubmit} className="survey-form">
-      <h2>General Questions</h2>
-      <div className="form-group">
-        <label>Enter your username:</label>
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-8 bg-pink-50 rounded-lg shadow-lg">
+      <h2 className="text-3xl font-semibold text-gray-700 mb-6">General Questions</h2>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Enter your username:</label>
         <input
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
         />
       </div>
 
-      <div className="form-group">
-        <label>Enter your full name:</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Enter your full name:</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
         />
       </div>
 
-      <div className="form-group">
-        <label>Age</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Age</label>
         <input
           type="number"
           value={age}
           onChange={(e) => setAge(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
         />
       </div>
 
-      <div className="form-group">
-        <label>Gender</label>
-        <select value={gender} onChange={(e) => setGender(e.target.value)} required>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Gender</label>
+        <select value={gender} onChange={(e) => setGender(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
           <option value="">Select Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
@@ -109,9 +119,9 @@ const SurveyForm = () => {
         </select>
       </div>
 
-      <div className="form-group">
-        <label>Race</label>
-        <select value={race} onChange={(e) => setRace(e.target.value)} required>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Race</label>
+        <select value={race} onChange={(e) => setRace(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
           <option value="">Select Race</option>
           <option value="asian">Asian</option>
           <option value="black">Black</option>
@@ -121,132 +131,129 @@ const SurveyForm = () => {
         </select>
       </div>
 
-      <div className="form-group">
-        <label>What's your primary language?</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">What's your primary language?</label>
         <input
           type="text"
           value={primaryLanguage}
           onChange={(e) => setPrimaryLanguage(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
         />
       </div>
 
-      <div className="form-group">
-        <label>Zip Code</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Zip Code</label>
         <input
           type="number"
           value={zipCode}
           onChange={(e) => setZipCode(e.target.value)}
           required
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
         />
       </div>
 
-      <h2>Medical History</h2>
-      <div className="form-group">
-        <label>Are you pregnant?</label>
-        <select value={pregnant} onChange={(e) => setPregnant(e.target.value)} required>
+      <h2 className="text-3xl font-semibold text-gray-700 mb-6">Medical History</h2>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Are you pregnant?</label>
+        <select value={pregnant} onChange={(e) => setPregnant(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
           <option value="">Select</option>
           <option value="yes">Yes</option>
           <option value="no">No</option>
         </select>
       </div>
 
-      <div className="form-group">
-        <label>If so, how many weeks pregnant?</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">If so, how many weeks pregnant?</label>
         <input
           type="number"
           value={weeksPregnant}
           onChange={(e) => setWeeksPregnant(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
         />
       </div>
 
-      <div className="form-group">
-        <label>How many pregnancies have you had before?</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">How many pregnancies have you had before?</label>
         <input
           type="number"
           value={previousPregnancies}
           onChange={(e) => setPreviousPregnancies(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
         />
       </div>
 
-      <div className="form-group">
-        <label>Are you postpartum?</label>
-        <select value={postpartum} onChange={(e) => setPostpartum(e.target.value)} required>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Are you postpartum?</label>
+        <select value={postpartum} onChange={(e) => setPostpartum(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
           <option value="">Select</option>
           <option value="yes">Yes</option>
           <option value="no">No</option>
         </select>
       </div>
 
-      <div className="form-group">
-        <label>If postpartum, how many weeks since birth?</label>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">If postpartum, how many weeks since birth?</label>
         <input
           type="number"
           value={weeksSinceBirth}
           onChange={(e) => setWeeksSinceBirth(e.target.value)}
+          className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
         />
       </div>
 
-      <div className="form-group">
-        <label>Have you ever had a miscarriage?</label>
-        <select value={miscarriages} onChange={(e) => setMiscarriage(e.target.value)} required>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Have you had seizures?</label>
+        <select value={seizures} onChange={(e) => setSeizures(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
           <option value="">Select</option>
           <option value="yes">Yes</option>
           <option value="no">No</option>
         </select>
       </div>
 
-      <div className="form-group">
-        <label>Have you experienced any seizures in the past?</label>
-        <select value={seizures} onChange={(e) => setSeizures(e.target.value)} required>
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-          <option value="na">N/A</option>
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label>Have you experienced preeclampsia in the past?</label>
-        <select value={preeclampsia} onChange={(e) => setPreeclampsia(e.target.value)} required>
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-          <option value="na">N/A</option>
-        </select>
-      </div>
-
-      <h2>Healthcare Access</h2>
-      <div className="form-group">
-        <label>Do you have health insurance?</label>
-        <select value={healthInsurance} onChange={(e) => setHealthInsurance(e.target.value)} required>
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-          <option value="uncertain">Uncertain</option>
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label>What is your current housing situation?</label>
-        <select value={unhoused} onChange={(e) => setUnhoused(e.target.value)} required>
-          <option value="">Select</option>
-          <option value="stable">Stable Housing Situation</option>
-          <option value="unstable">Unstable Housing Situation</option>
-        </select>
-      </div>
-
-      <div className="form-group">
-        <label>Are you currently on food stamps?</label>
-        <select value={foodStamps} onChange={(e) => setFoodStamps(e.target.value)} required>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Have you experienced preeclampsia?</label>
+        <select value={preeclampsia} onChange={(e) => setPreeclampsia(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
           <option value="">Select</option>
           <option value="yes">Yes</option>
           <option value="no">No</option>
         </select>
       </div>
 
-      <Link to="/patient-dashboard" className="submit-button">
-          Submit
-        </Link>
+      <h2 className="text-3xl font-semibold text-gray-700 mb-6">Additional Information</h2>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Do you have health insurance?</label>
+        <select value={healthInsurance} onChange={(e) => setHealthInsurance(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Are you unhoused?</label>
+        <select value={unhoused} onChange={(e) => setUnhoused(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-600 mb-1">Do you receive food stamps?</label>
+        <select value={foodStamps} onChange={(e) => setFoodStamps(e.target.value)} required className="block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <button type="submit" className="mt-4 w-full bg-blue-400 text-white p-3 rounded-md hover:bg-blue-500 transition duration-300">
+        Submit
+      </button>
+      <Link to="/" className="block text-center mt-4 text-blue-500 hover:underline">
+        Go back to home
+      </Link>
     </form>
   );
 };
