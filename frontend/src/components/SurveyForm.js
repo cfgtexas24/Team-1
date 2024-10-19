@@ -69,65 +69,56 @@ const SurveyForm = () => {
   return (
     <form onSubmit={handleSubmit} className="survey-form">
       <h2>General Questions</h2>
-      <div className="form-group">
-        <label>Enter your username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
+      <label>Enter your username: </label>
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
 
-      <div className="form-group">
-        <label>Enter your full name:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
+      <label>Enter your full name: </label>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => {
+            setName(e.target.value);
+            localStorage.setItem("name", e.target.value); // Store name in localStorage
+          }}
+      />
 
-      <div className="form-group">
-        <label>Age</label>
-        <input
-          type="number"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
-      </div>
+      <label>Age</label>
+      <input
+        type="number"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+      />
 
-      <div className="form-group">
-        <label>Gender</label>
-        <select value={gender} onChange={(e) => setGender(e.target.value)} required>
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="non-binary">Non-binary</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
+      <label>Gender</label>
+      <select value={gender} onChange={(e) => setGender(e.target.value)} required>
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="non-binary">Non-binary</option>
+        <option value="other">Other</option>
+      </select>
 
-      <div className="form-group">
-        <label>Race</label>
-        <select value={race} onChange={(e) => setRace(e.target.value)} required>
-          <option value="">Select Race</option>
-          <option value="asian">Asian</option>
-          <option value="black">Black</option>
-          <option value="white">White</option>
-          <option value="hispanic">Hispanic</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
+      <label>Race</label>
+      <select value={race} onChange={(e) => setRace(e.target.value)} required>
+        <option value="">Select Race</option>
+        <option value="asian">Asian</option>
+        <option value="black">Black</option>
+        <option value="white">White</option>
+        <option value="hispanic">Hispanic</option>
+        <option value="other">Other</option>
+      </select>
 
-      <div className="form-group">
-        <label>Zip Code</label>
-        <input
-          type="number"
-          value={zipCode}
-          onChange={(e) => setZipCode(e.target.value)}
-          required
-        />
-      </div>
+      <label>Zip Code</label>
+      <input
+        type="number"
+        value={zipCode}
+        onChange={(e) => setZipCode(e.target.value)}
+        required
+      />
 
       <h2>Medical History</h2>
       <div className="form-group">
