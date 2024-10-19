@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import './SurveyForm.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SurveyForm = () => {
   // Initialize state for each question
@@ -23,12 +23,9 @@ const SurveyForm = () => {
   const [unhoused, setUnhoused] = useState("");
   const [foodStamps, setFoodStamps] = useState("");
 
-  const navigate = useNavigate();
-
   // Submit handler for form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     // Create an object with the survey data
     const surveyData = {
@@ -52,25 +49,24 @@ const SurveyForm = () => {
     };
 
     try {
-        // Send data to the backend using fetch
-        const response = await fetch("/patient-initial-form", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(surveyData),
-        });
-  
-        if (response.ok) {
-          console.log("Survey submitted successfully!");
-          navigate("/patient-dashboard"); // Navigate to the patient dashboard
-        } else {
-          console.log("Error submitting the survey");
-        }
-      } catch (error) {
-        console.error("Error:", error);
+      // Send data to the backend using fetch
+      const response = await fetch("/patient-initial-form", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(surveyData),
+      });
+
+      if (response.ok) {
+        console.log("Survey submitted successfully!");
+      } else {
+        console.log("Error submitting the survey");
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-8 bg-pink-50 rounded-lg shadow-lg">
@@ -248,7 +244,7 @@ const SurveyForm = () => {
         </select>
       </div>
 
-      <button type="submit" className="mt-4 w-full bg-blue-400 text-white p-3 rounded-md hover:bg-blue-500 transition duration-300">
+      <button type="submit" className="mt-4 w-full bg-blue-400 text-white p-3 rounded-md hover:bg-blue-500 transition duration-300" onClick>
         Submit
       </button>
       <Link to="/" className="block text-center mt-4 text-blue-500 hover:underline">
