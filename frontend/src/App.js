@@ -6,6 +6,7 @@ import Home from './components/Home';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import PatientDashboard from './components/PatientDashboard';
+import ProviderDashboard from './components/ProviderDashboard';
 import AdminDashboard from './components/AdminDashboard'; // Import the AdminDashboard component
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/patient/signup" element={<SignUp />} />
         {/* Standalone Admin Dashboard Route */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/provider-dashboard" element={<ProviderDashboard />} />
       </Routes>
     </BrowserRouter>
   );
