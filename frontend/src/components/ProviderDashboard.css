@@ -1,0 +1,92 @@
+/* Container styles */
+.container {
+    width: 80%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  /* Form styles */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Label styles */
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* Input, textarea, and select styles */
+  input[type="text"], 
+  textarea, 
+  select {
+    width: 100%; /* Make the inputs and text areas take full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  /* Textarea styles for multiple lines */
+  textarea {
+    min-height: 60px;
+    resize: vertical;
+  }
+  
+  /* Button styles */
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .lab-reports-title {
+    font-size: 24px; 
+    font-weight: bold; 
+    margin-top: 20px;  
+    text-align: center;  
+    color: #333;  
+
+  }
+  
+  /* Align save & lab report button */
+  button[type="submit"], 
+  button[type="button"] {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Lab report section */
+  .lab-reports-section {
+    margin-top: 30px;
+  }
+  
+  /* making sure the form responsiveness on maybe mobile */
+  @media (max-width: 768px) {
+    .container {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+    }
+  }  
