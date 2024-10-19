@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 
 
-const patientDashboard = () => {
+const PatientDashboard = () => {
 
   const [patient, setPatient] = useState(
     {
@@ -13,8 +13,11 @@ const patientDashboard = () => {
   )
   
   return (
-    <div></div>
+    <div className='flex flex-row'>
+      <div></div>
+      {patient.firstName}, {patient.lastName}
+    </div>
   )
 }
 
-export default patientDashboard
+export default PatientDashboard
