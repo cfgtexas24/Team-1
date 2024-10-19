@@ -25,15 +25,45 @@ const PatientDashboard = () => {
   };
 
   // store patient state
-  const [patient, setPatient] = useState(
+  const [patient, setPatient] = useState({ name : "Jane Doe" })
+  const [demographics, setDemographics] = useState(
     {
+      username: "jDoe@gmail.com",
       name: "Jane Doe",
       age: 28,
-    }
+      above_forty: false,
+      gender: "female",
+      race: "Asian",
+      zipCode: 75049,
+      pregnant: true,
+      weeks_along: 15,
+      postpartum: false,
+      weeks_since_birth: 0,
+      health_insurance: true,
+      unhoused: false,
+      food_stamps: false,
+      lost_pregnancy: false,
+      seizures: false,
+      preeclampsia: true,
+      successfulBirth: null,
+      birthComplications: "",
+      primaryLanguages: "English",
+      above_forty: false,
+      bloodPressure: "90/90",
+      nutrition: "None",
+      notes: "",
+      prenatalTesting: "None",
+      emotionalWellBeing: "Well",
+      exercise: "None",
+      weight: "150",
+      concerns: "None",
+      birthPlan: "Hospital Birth",
+      abdomenMeasurement: "40in"
+      }
   )
 
   // state for lab objects
-  const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again'])
+  const [labs, setLabs] = useState([])
 
 
   // upcoming appointment information
@@ -51,14 +81,32 @@ const PatientDashboard = () => {
 
   const [classes, setClasses] = useState([
     {
-      date: '2024-11-12T20:10:45.000Z',
+      date: '2024-10-26T20:10:45.000Z',
       title: 'Pre-natal Education Class',
-    }
+    },
+    {
+      date: '2024-10-26T10:10:45.000Z',
+      title: 'Single Mother Community Session',
+    },
+    {
+      date: '2024-10-22T20:10:45.000Z',
+      title: 'Pre-natal Education Class',
+    },
+
+
   ])
 
   const [availableClasses, setAvailableClasses] = useState([
     {
-      date: '2024-10-12T20:10:45.000Z',
+      date: '2024-11-02T20:10:45.000Z',
+      title: 'Pre-natal Education Class',
+    },
+    {
+      date: '2024-10-22T10:10:45.000Z',
+      title: 'Pre-natal Education Class',
+    },
+    {
+      date: '2024-10-22T12:10:45.000Z',
       title: 'Pre-natal Education Class',
     }
   ])
@@ -88,17 +136,49 @@ const PatientDashboard = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       setUpcomingAppointments(data);
     } catch (error) {
       console.error('Error fetching appointments:', error);
     }
   };
 
+  const fetchDemographics = async () => {
+    const response = await fetch('http://localhost:8008/patients/demographics', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // specify the content type
+      },
+      body: JSON.stringify({ "name": "Jane Doe" })
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    setDemographics(data);
+  }
+
+  const fetchLabs = async () => {
+    const response = await fetch('http://localhost:8008/patient/record', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // specify the content type
+      },
+      body: JSON.stringify({ "name" : "Jane Doe"})
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data)
+    setLabs(data.reports);
+  }
+
 
   useEffect(() => {
     // sort all events (classes and appointments) by date 
     fetchAppointments()
+    fetchDemographics()
+    fetchLabs()
 
     const combined = [
       ...classes.map(c => ({ ...c, type: 'class' })),
@@ -113,7 +193,9 @@ const PatientDashboard = () => {
     <div className='flex flex-row w-screen h-screen'>
       <div className="flex flex-col h-screen w-1/4 bg-slate-700 justify-center items-center text-white">
         <h1>Hello, <span><b> {patient.name}</b></span></h1>
-        <ul className='flex flex-col gap-8'>
+        <h2 >Age: <span><b>{demographics.age}</b></span></h2>
+        <h2 >Pregnancy: <span><b>{demographics.weeks_along} weeks</b></span></h2>
+        <ul className='flex flex-col gap-8 m-4'>
           <li><button onClick={() => scrollTo(notificationsRef)}>Notifications</button></li>
           <li><button onClick={() => scrollTo(labReportsRef)}>Lab Report</button></li>
           <li><button onClick={() => scrollTo(appointmentsRef)}>Appointments</button></li>
@@ -123,18 +205,21 @@ const PatientDashboard = () => {
       <div id="content" className="flex flex-col gap-12 h-screen w-full bg-gray-300 p-8">
         <div>
           <h2 ref={notificationsRef} className='font-bold text-xl'>Notifications</h2>
+          <p>No new notifications!</p>
         </div>
         <div>
           <h2 ref={labReportsRef} className='font-bold text-xl'>Your Latest lab reports:</h2>
-          <div className='flex flex-col'>
+          <div className='flex flex-row'>
             {labs.map(lab => (
-              <LabReport lab={lab} />
+              <>
+                <LabReport lab={lab} />
+              </>
             ))}
           </div>
         </div>
         <div>
           <h2 ref={appointmentsRef} className='text-xl pt-8'>
-            You have an upcoming appointment at <span><b>{new Date(upcomingAppointments[0].time).toLocaleString('en-US', {
+            You have an upcoming appointment at <span><b>{new Date(upcomingAppointments[0].date).toLocaleString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
@@ -152,12 +237,13 @@ const PatientDashboard = () => {
               <PatientCalendar
                 appointments={upcomingAppointments}
                 classes={classes}
+                offered={availableClasses}
               />
             </div>
             <div className='bg-white rounded-lg p-4 shadow-md w-full'>
               <h2 className="mb-4"><b>Scheduled Events</b></h2>
               {allEvents.map(event => (
-                <div className={event.type === 'class' ? 'text-blue-500' : event.type === 'appointment' ? 'text-green-500' : ''}>
+                <div className={event.type === 'class' ? 'text-green-500' : event.type === 'appointment' ? 'text-blue-500' : ''}>
                   <h2><b>{event.type === 'class' ? event.title : 'Appointment'}</b></h2>
                   <p className='mb-4'>{new Date(event.date).toLocaleString('en-US', {
                     year: 'numeric',
@@ -172,11 +258,9 @@ const PatientDashboard = () => {
               ))}
             </div>
             <div className='bg-white rounded-lg p-4 shadow-md w-full'>
-              <div>
-
-              </div>
-              <h2 className="mb-4"><b>Available Classes</b></h2>
-              {availableClasses.map((availableClass, index) => (
+            <h2 className="mb-4"><b>Available Classes</b></h2>
+            <div className='flex flex-col gap-4'>
+            {availableClasses.map((availableClass, index) => (
                 <div key={index} className='flex flex-row'>
                   <div className='w-full'>
                     <h2><b>{availableClass.title}</b></h2>
@@ -193,6 +277,8 @@ const PatientDashboard = () => {
                   <button className='w-18'>Sign Up</button>
                 </div>
               ))}
+
+              </div>
               </div>
           </div>
         </div>

@@ -244,12 +244,7 @@ const SurveyForm = () => {
         </select>
       </div>
 
-      <button type="submit" className="mt-4 w-full bg-blue-400 text-white p-3 rounded-md hover:bg-blue-500 transition duration-300" onClick>
-        Submit
-      </button>
-      <Link to="/" className="block text-center mt-4 text-blue-500 hover:underline">
-        Go back to home
-      </Link>
+      <Link to="/patient/dashboard" className="submit-button">Submit</Link>
     </form>
   );
 };

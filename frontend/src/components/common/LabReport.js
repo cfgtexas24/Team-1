@@ -1,13 +1,18 @@
-import React from 'react'
+import React from 'react';
 
 const LabReport = (props) => {
-
     const lab = props.lab;
-    return (
-        <div className='p-2'>
-        {lab}
-    </div>
-)
-}
+    console.log(lab);
 
-export default LabReport
+    return (
+        <div className='bg-white p-4 rounded-lg flex flex-col'>
+            {Object.entries(lab).map(([key, value]) => (
+                <span key={key}>
+                    <b>{key}: </b> {typeof value === 'boolean' ? value.toString() : value}
+                </span>
+            ))}
+        </div>
+    );
+};
+
+export default LabReport;

@@ -16,6 +16,7 @@ const ProviderDashboard = () => {
     concerns: '',
     emotionalWellBeing: '',
     birthPlan: '',
+    highRisk: null
   });
   const [labReports, setLabReports] = useState([]);
   const [selectedLabType, setSelectedLabType] = useState('Pregnancy result');
@@ -31,11 +32,20 @@ const ProviderDashboard = () => {
       .catch(error => console.error('Error fetching patient data:', error));
   }, [id]);
 
+  // Handle input changes for editable patient data
   const handleChange = (e) => {
-    setPatientData({
-      ...patientData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      setPatientData({
+        ...patientData,
+        highRisk: name === 'highRiskYes' ? true : false,
+      });
+    } else {
+      setPatientData({
+        ...patientData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -110,7 +120,20 @@ const ProviderDashboard = () => {
 
         <label className={styles.label}>Birth Plan Preferences:</label>
         <textarea name="birthPlan" value={patientData.birthPlan} onChange={handleChange} className={styles.textarea} />
-
+{/* New section for High Risk Patient */}
+<div className="high-risk-section">
+          <label>High Risk Patient:</label>
+          <div className="checkbox-container">
+            <label>
+              <input
+                type="checkbox"
+                name="highRiskYes"
+                checked={patientData.highRisk === true}
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+        </div>
         <button type="submit" className={`${styles.button} ${styles['button-submit']}`}>Save</button>
       </form>
 

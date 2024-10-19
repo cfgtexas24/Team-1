@@ -295,7 +295,7 @@ app.post('/appointments/get', async(req, res) => {
 })
 
 // Patient View Information
-app.get('/patients/demographics', async (req, res) => {
+app.post('/patients/demographics', async (req, res) => {
   let name = "";
   try {
     name = req.body.name;
@@ -353,7 +353,7 @@ app.get('/patients', async (req, res) => {
 });
 
 // GET a specific patient's medical records
-app.get('/patient/record', async (req, res) => {
+app.post('/patient/record', async (req, res) => {
   const name = req.body.name;
 
   try {
@@ -363,6 +363,8 @@ app.get('/patient/record', async (req, res) => {
     if (!doc.exists) {
       return res.status(404).json({ message: 'No medical records found for this patient' });
     }
+
+    console.log(doc)
 
     res.json(doc.data());
 
