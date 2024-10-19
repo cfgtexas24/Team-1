@@ -9,7 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Firebase Admin Initialization
 const serviceAccount = require('./abide-6ec6e-firebase-adminsdk-khvbi-7a4ca1a8ba.json');
@@ -88,7 +88,24 @@ app.get('/patients', async (req, res) => {
     }
 });
   
-  
+// Initial Patient Form
+app.post('/patients/initial-form', async (req, res) => {
+  let patientInitialData = {};
+  try {
+    patientInitialData = req.body;
+    console.log(patientInitialData);
+  } catch(error) {
+    console.error('Error fetching patients initial data:', error);
+    res.status(500).json({ error: 'Error fetching patients initial data' });
+  }
+  try {
+    await db.collection('patients').add(patientInitialData);
+    res.status(200).json({ message: 'Data fetched and added to database successfully'});
+  } catch(error) {
+    console.error('Error adding data to database:', error);
+    res.status(500).json({ error: 'Error adding data to database' });
+  }
+});
 
 // Start the server
 const port = 8008;
