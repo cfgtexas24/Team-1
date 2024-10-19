@@ -24,6 +24,18 @@ const PatientDashboard = () => {
     });
   };
 
+ // store patient state
+ const [patient, setPatient] = useState(
+  {
+    name: "Jane Doe",
+    age: 28,
+  }
+)
+
+// state for lab objects
+const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again'])
+
+
   // upcoming appointment information
   const [upcomingAppointments, setUpcomingAppointments] = useState([
     {
