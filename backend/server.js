@@ -195,8 +195,6 @@ app.get('/classes/offered', async (req, res) => {
         dictionary[doc.id] = data;
       }
     });
-    console.log('non-filtered', dictionary);
-    dictionary.filter();
     res.status(200).json(dictionary);
   } catch (error) {
     console.error('Error fetching class offerings data:', error);
