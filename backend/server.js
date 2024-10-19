@@ -128,7 +128,7 @@ app.post('/patients/initial-form', async (req, res) => {
   }
   try {
     await db.collection('patients').doc(userID).set(patientInitialData);
-    await db.collection('medicalRecords').doc(userID).set({"weight": 0, "bloodPressure": 0, "notes": "", "abdomenMeasurement": 0, "nutrition": "", "exercise": "", "prenatalTesting": "", "concerns": "", "emotionalWellBeing": "", "birthPlan": "" });
+    await db.collection('medicalRecords').doc(userID).set({"weight": 0, "bloodPressure": 0, "notes": "", "abdomenMeasurement": 0, "nutrition": "", "exercise": "", "prenatalTesting": "", "concerns": "", "emotionalWellBeing": "", "birthPlan": "" , "successfulBirth": "", "birthComplications": "", "servicesAccessed": ""});
     await db.collection('appointments').doc(userID).set({"appointments": [""]});
     await db.collection('classes').doc(userID).set({"classes": [""]});
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
@@ -232,14 +232,14 @@ app.get('/patients/medical-records', async (req, res) => {
 });
 
 // Patient Lab Report
-app.get('/patient/lab-report', async (req, res) => {
-  try{
+// app.get('/patient/lab-report', async (req, res) => {
+//   try{
 
-  } catch(error) {
-    console.error('Error fetching data from database:', error);
-    res.status(500).json({ error: 'Error fetching data from database' });
-  }
-});
+//   } catch(error) {
+//     console.error('Error fetching data from database:', error);
+//     res.status(500).json({ error: 'Error fetching data from database' });
+//   }
+// });
 
 // PROVIDERS
 // Get all patients data
@@ -319,6 +319,17 @@ app.post('/patient/record/update/prenatalTesting', (req, res) => {
   updateMedicalRecordField(req, res, 'prenatalTesting');
 });
 
+app.post('/patient/record/update/successfulBirth', (req, res) => {
+  updateMedicalRecordField(req, res, 'successfulBirth');
+});
+
+app.post('/patient/record/update/birthComplications', (req, res) => {
+  updateMedicalRecordField(req, res, 'birthComplications');
+});
+
+app.post('/patient/record/update/servicesAccessed', (req, res) => {
+  updateMedicalRecordField(req, res, 'servicesAccessed');
+});
 
 
 // app.post('patient/record/update/bloodPressure', async(req, res) => {
@@ -355,8 +366,57 @@ app.post('/patient/record/update/prenatalTesting', (req, res) => {
   // }
 // });
 
-// ADMIN
 
+// ADMIN
+// GET successful birth count
+app.get('/admin/successfulBirths', async (req, res) => {
+  try {
+    const snapshot = await db.collection('medicalRecords').where('successfulBirth', '==', true).get();
+
+    if (snapshot.empty) {
+      return res.status(200).json({ successfulBirthCount: 0});
+    }
+
+    const successfulBirthCount = snapshot.size;
+
+    res.status(200).json({ successfulBirthCount });
+  } catch (error) {
+    console.error('Error counting successful births:', error);
+    res.status(500).json({ error: 'Error counting successful births' });
+  }
+});
+
+// GET birth complications
+app.get('/admin/birthComplications', async (req, res) => {
+  try {
+    // Fetch all documents in the 'medicalRecords' collection
+    const snapshot = await db.collection('medicalRecords').get();
+
+    if (snapshot.empty) {
+      return res.status(200).json({ birthComplications: [] });
+    }
+
+    // Initialize an array to store birth complications
+    const birthComplications = [];
+
+    // Iterate through the documents
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      // Check if birthComplications field exists and is not an empty string
+      if (data.birthComplications && data.birthComplications.trim() !== '') {
+        birthComplications.push(data.birthComplications);
+      }
+    });
+
+    // Return the array of birth complications
+    res.status(200).json({ birthComplications });
+
+  } catch (error) {
+    console.error('Error fetching birth complications:', error);
+    res.status(500).json({ error: 'Error fetching birth complications' });
+  }
+});
 
 
 // Start the server
