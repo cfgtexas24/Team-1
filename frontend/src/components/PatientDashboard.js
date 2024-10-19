@@ -11,10 +11,7 @@ import PatientCalendar from './common/PatientCalendar'
 // survey sent by provider
 // calendar of latest appointments
 // list latest services - can also show on the calendar
-
 const PatientDashboard = () => {
-
-  // useRef for sending scren down to certain sections
   const notificationsRef = useRef(null);
   const labReportsRef = useRef(null);
   const appointmentsRef = useRef(null);
@@ -24,19 +21,20 @@ const PatientDashboard = () => {
     window.scrollTo({
       top: elementRef.current.offsetTop,
       behavior: 'smooth'
-    })
+    });
+  };
+
+ // store patient state
+ const [patient, setPatient] = useState(
+  {
+    name: "Jane Doe",
+    age: 28,
   }
+)
 
-  // store patient state
-  const [patient, setPatient] = useState(
-    {
-      name: "Jane Doe",
-      age: 28,
-    }
-  )
+// state for lab objects
+const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again'])
 
-  // state for lab objects
-  const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again'])
 
   // upcoming appointment information
   const [upcomingAppointments, setUpcomingAppointments] = useState([
@@ -179,7 +177,7 @@ const PatientDashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PatientDashboard
+export default PatientDashboard;
