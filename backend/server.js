@@ -40,6 +40,7 @@ app.post('/verify-token', async (req, res) => {
   }
 });
 
+// PATIENTS
 // Fetch patient data by ID
 app.get('/patients/:id', async (req, res) => {
     const patientId = req.params.id;
@@ -113,47 +114,6 @@ app.post('/patients/initial-form', async (req, res) => {
   }
 });
 
-// Fetch all patients data
-app.get('/patients', async (req, res) => {
-  try {
-    const snapshot = await db.collection('patients').get();
-    const patients = snapshot.docs.map(doc => doc.data());
-
-    res.json(patients);
-  } catch (error) {
-    console.error('Error fetching patients data:', error);
-    res.status(500).json({ error: 'Error fetching patients data' });
-  }
-});
-
-app.get('/providers/patient-records', async (req, res) => {
-  try {
-    const providerSnapshot = await db.collection('providers').get();
-    const allPatientRecords = [];
-
-    for (const doc of providerSnapshot.docs) {
-      const providerData = doc.data();
-      const patients = providerData.patients;
-      console.log(patients);
-
-      for (const patient of patients) {
-
-        const medicalRecordsSnapshot = await db.collection('medicalRecords').get(patient);
-        console.log(medicalRecordsSnapshot);
-
-        medicalRecordsSnapshot.forEach(recordDoc => {
-          allPatientRecords.push(recordDoc.data());
-        });
-      }
-    }
-    res.json(allPatientRecords);
-
-  } catch(error) {
-    console.error('Error fetching patient records:', error);
-    res.status(500).json({ error: 'Error fetching patients records' });
-  }
-});
-
 // Patient View Information
 
 // Specific Patient Medical Records
@@ -187,6 +147,70 @@ app.get('/patient/lab-report', async (req, res) => {
     res.status(500).json({ error: 'Error fetching data from database' });
   }
 });
+
+// PROVIDERS
+// Get all patients data
+app.get('/patients', async (req, res) => {
+  try {
+    const snapshot = await db.collection('patients').get();
+    const patients = snapshot.docs.map(doc => doc.data());
+
+    res.json(patients);
+  } catch (error) {
+    console.error('Error fetching patients data:', error);
+    res.status(500).json({ error: 'Error fetching patients data' });
+  }
+});
+
+// GET a specific patient's medical records
+app.get('/patient/record', async (req, res) => {
+  const name = req.body.name;
+
+  try {
+    const recordRef = db.collection('medicalRecords').doc(name);
+    const doc = await recordRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No medical records found for this patient' });
+    }
+
+    res.json(doc.data());
+
+  } catch (error) {
+    console.error('Error fetching patient records:', error);
+    res.status(500).json({ error: 'Error fetching record' });
+  }
+});
+
+
+app.get('/providers/patient-records', async (req, res) => {
+  try {
+    const providerSnapshot = await db.collection('providers').get();
+    const allPatientRecords = [];
+
+    for (const doc of providerSnapshot.docs) {
+      const providerData = doc.data();
+      const patients = providerData.patients;
+      console.log(patients);
+
+      for (const patient of patients) {
+
+        const medicalRecordsSnapshot = await db.collection('medicalRecords').get(patient);
+        console.log(medicalRecordsSnapshot);
+
+        medicalRecordsSnapshot.forEach(recordDoc => {
+          allPatientRecords.push(recordDoc.data());
+        });
+      }
+    }
+    res.json(allPatientRecords);
+
+  } catch(error) {
+    console.error('Error fetching patient records:', error);
+    res.status(500).json({ error: 'Error fetching patients records' });
+  }
+});
+
 
 // Start the server
 const port = 8008;
