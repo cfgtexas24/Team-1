@@ -25,7 +25,7 @@ const db = admin.firestore();
 const updateMedicalRecordField = async (req, res, field, newValue) => {
   const name = req.body.name; // Get the patient's name (document ID)
   //const newValue = req.body.newValue; // The new value for the field
-  console.log(newValue);
+
   try {
     const recordRef = db.collection('medicalRecords').doc(name);
 
@@ -258,46 +258,6 @@ app.post('/patient/record/update', (req, res) => {
   console.log(body[field]);
   updateMedicalRecordField(req, res, field, body[field]);
 });
-
-// Route to update nutrition
-app.post('/patient/record/update/nutrition', (req, res) => {
-  updateMedicalRecordField(req, res, 'nutrition');
-});
-
-// Route to update weight
-app.post('/patient/record/update/weight', (req, res) => {
-  updateMedicalRecordField(req, res, 'weight');
-});
-
-// Add similar routes for other fields like exercise, concerns, etc.
-app.post('/patient/record/update/exercise', (req, res) => {
-  updateMedicalRecordField(req, res, 'exercise');
-});
-
-app.post('/patient/record/update/birthPlan', (req, res) => {
-  updateMedicalRecordField(req, res, 'birthPlan');
-});
-
-app.post('/patient/record/update/abdomenMeasurement', (req, res) => {
-  updateMedicalRecordField(req, res, 'abdomenMeasurement');
-});
-
-app.post('/patient/record/update/concerns', (req, res) => {
-  updateMedicalRecordField(req, res, 'concerns');
-});
-
-app.post('/patient/record/update/emotionalWellBeing', (req, res) => {
-  updateMedicalRecordField(req, res, 'emotionalWellBeing');
-});
-
-app.post('/patient/record/update/notes', (req, res) => {
-  updateMedicalRecordField(req, res, 'notes');
-});
-
-app.post('/patient/record/update/prenatalTesting', (req, res) => {
-  updateMedicalRecordField(req, res, 'prenatalTesting');
-});
-
 
 
 // app.post('patient/record/update/bloodPressure', async(req, res) => {
