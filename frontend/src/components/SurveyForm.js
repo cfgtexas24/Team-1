@@ -9,6 +9,7 @@ const SurveyForm = () => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [race, setRace] = useState("");
+  const [primaryLanguage, setPrimaryLanguage] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [pregnant, setPregnant] = useState("");
   const [weeksPregnant, setWeeksPregnant] = useState("");
@@ -118,6 +119,15 @@ const SurveyForm = () => {
           <option value="hispanic">Hispanic</option>
           <option value="other">Other</option>
         </select>
+      </div>
+
+      <div className="form-group">
+        <label>What's your primary language?</label>
+        <input
+          type="text"
+          value={primaryLanguage}
+          onChange={(e) => setPrimaryLanguage(e.target.value)}
+        />
       </div>
 
       <div className="form-group">
