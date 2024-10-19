@@ -193,8 +193,11 @@ const PatientDashboard = () => {
     <div className='flex flex-row w-screen h-screen'>
       <div className="flex flex-col h-screen w-1/4 bg-slate-700 justify-center items-center text-white">
         <h1>Hello, <span><b> {patient.name}</b></span></h1>
-        <h2 >Age: <span><b>{demographics.age}</b></span></h2>
-        <h2 >Pregnancy: <span><b>{demographics.weeks_along} weeks</b></span></h2>
+        <h2>Age: <span><b>{demographics.age}</b></span></h2>
+        <h2>Pregnancy: <span><b>{demographics.weeks_along} weeks</b></span></h2>
+        <h2><b>{demographics.weeks_along ? "Insured" : "Uninsured"}</b></h2>
+        <h2>Blood Pressure: <span><b>{demographics.bloodPressure}</b></span></h2>
+
         <ul className='flex flex-col gap-8 m-4'>
           <li><button onClick={() => scrollTo(notificationsRef)}>Notifications</button></li>
           <li><button onClick={() => scrollTo(labReportsRef)}>Lab Report</button></li>
@@ -209,7 +212,7 @@ const PatientDashboard = () => {
         </div>
         <div>
           <h2 ref={labReportsRef} className='font-bold text-xl'>Your Latest lab reports:</h2>
-          <div className='flex flex-row'>
+          <div className='flex flex-row gap-8'>
             {labs.map(lab => (
               <>
                 <LabReport lab={lab} />
