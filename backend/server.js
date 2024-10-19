@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const path = require('path');
+const { getFirestore, doc, collection, addDoc } = require('firebase/firestore');
 require('dotenv').config();
 
 const app = express();
@@ -91,15 +92,20 @@ app.get('/patients', async (req, res) => {
 // Initial Patient Form
 app.post('/patients/initial-form', async (req, res) => {
   let patientInitialData = {};
+  let userID = "";
   try {
     patientInitialData = req.body;
+    userID = patientInitialData.name;
     console.log(patientInitialData);
   } catch(error) {
     console.error('Error fetching patients initial data:', error);
     res.status(500).json({ error: 'Error fetching patients initial data' });
   }
   try {
-    await db.collection('patients').add(patientInitialData);
+    await db.collection('patients').doc(userID).set(patientInitialData);
+    await db.collection('medicalRecords').doc(userID).set({});
+    await db.collection('appointments').doc(userID).set({});
+    await db.collection('classes').doc(userID).set({});
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
   } catch(error) {
     console.error('Error adding data to database:', error);
@@ -145,6 +151,40 @@ app.get('/providers/patient-records', async (req, res) => {
   } catch(error) {
     console.error('Error fetching patient records:', error);
     res.status(500).json({ error: 'Error fetching patients records' });
+  }
+});
+
+// Patient View Information
+
+// Specific Patient Medical Records
+app.get('/patients/medical-records', async (req, res) => {
+  let username = {};
+  try {
+    username = req.body;
+    console.log(username);
+  } catch(error) {
+    console.error('Error fetching patients username:', error);
+    res.status(500).json({ error: 'Error patients username' });
+  }
+  try {
+    const userID = await db.collection('patients').get();
+    //const labReports = await db.collection('medicalRecords').get();
+    //const patients = snapshot.docs.map(doc => doc.data());
+  
+    res.status(200).json(userID);
+  } catch(error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Error fetching data from database' });
+  }
+});
+
+// Patient Lab Report
+app.get('/patient/lab-report', async (req, res) => {
+  try{
+
+  } catch(error) {
+    console.error('Error fetching data from database:', error);
+    res.status(500).json({ error: 'Error fetching data from database' });
   }
 });
 
