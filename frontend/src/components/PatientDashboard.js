@@ -24,16 +24,16 @@ const PatientDashboard = () => {
     });
   };
 
- // store patient state
- const [patient, setPatient] = useState(
-  {
-    name: "Jane Doe",
-    age: 28,
-  }
-)
+  // store patient state
+  const [patient, setPatient] = useState(
+    {
+      name: "Jane Doe",
+      age: 28,
+    }
+  )
 
-// state for lab objects
-const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again'])
+  // state for lab objects
+  const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again'])
 
 
   // upcoming appointment information
@@ -82,12 +82,13 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
         headers: {
           'Content-Type': 'application/json', // specify the content type
         },
-        body: JSON.stringify({"name":"Jane Doe"}), // convert the data to a JSON string
+        body: JSON.stringify({ "name": "Jane Doe" }), // convert the data to a JSON string
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data);
       setUpcomingAppointments(data);
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -133,7 +134,7 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
         </div>
         <div>
           <h2 ref={appointmentsRef} className='text-xl pt-8'>
-            You have an upcoming appointment at <span><b>{new Date(upcomingAppointments[0].date).toLocaleString('en-US', {
+            You have an upcoming appointment at <span><b>{new Date(upcomingAppointments[0].time).toLocaleString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
@@ -153,7 +154,7 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
                 classes={classes}
               />
             </div>
-            {/* <div className='bg-white rounded-lg p-4 shadow-md w-full'>
+            <div className='bg-white rounded-lg p-4 shadow-md w-full'>
               <h2 className="mb-4"><b>Scheduled Events</b></h2>
               {allEvents.map(event => (
                 <div className={event.type === 'class' ? 'text-blue-500' : event.type === 'appointment' ? 'text-green-500' : ''}>
@@ -169,14 +170,14 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
                   </p>
                 </div>
               ))}
-            </div> */}
-            {/* <div className='bg-white rounded-lg p-4 shadow-md w-full'>
+            </div>
+            <div className='bg-white rounded-lg p-4 shadow-md w-full'>
               <div>
 
               </div>
               <h2 className="mb-4"><b>Available Classes</b></h2>
-              {availableClasses.map(availableClass => (
-                <div className='flex flex-row'>
+              {availableClasses.map((availableClass, index) => (
+                <div key={index} className='flex flex-row'>
                   <div className='w-full'>
                     <h2><b>{availableClass.title}</b></h2>
                     <p>{new Date(availableClass.date).toLocaleString('en-US', {
@@ -186,14 +187,13 @@ const [labs, setLabs] = useState(['lab 1 text here :)', 'lab 2 text here again']
                       hour: 'numeric',
                       minute: 'numeric',
                       hour12: true
-                    })}
-                    </p>
-                    <p className='mb-4'>{availableClass}</p>
+                    })}</p>
+                    {/* Remove or modify this line that was causing the error */}
                   </div>
                   <button className='w-18'>Sign Up</button>
                 </div>
               ))}
-            </div> */}
+              </div>
           </div>
         </div>
       </div>
