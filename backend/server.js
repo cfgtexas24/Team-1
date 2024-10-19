@@ -90,14 +90,16 @@ app.get('/patients', async (req, res) => {
   
 // Initial Patient Form
 app.post('/patients/initial-form', async (req, res) => {
+  let patientInitialData = {};
   try {
-    const patientInitialData = req.body;
+    patientInitialData = req.body;
+    console.log(patientInitialData);
   } catch(error) {
     console.error('Error fetching patients initial data:', error);
     res.status(500).json({ error: 'Error fetching patients initial data' });
   }
   try {
-    await addDoc(collection(db, 'demographics'), patientInitialData);
+    await db.collection('patients').add(patientInitialData);
     res.status(200).json({ message: 'Data fetched and added to database successfully'});
   } catch(error) {
     console.error('Error adding data to database:', error);
