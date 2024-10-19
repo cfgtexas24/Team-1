@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const path = require('path');
 const { getFirestore, doc, collection, addDoc } = require('firebase/firestore');
+
 require('dotenv').config();
 
 const app = express();
@@ -202,7 +203,27 @@ app.post('/patient/class-sign-up', async (req, res) => {
 
 // POST to appts for patient signs up for an appt
 app.post('/patient/appointment-sign-up', async (req, res) => {
-  
+  try {
+    const body = req.body;
+    const date = new Date(body.time);
+    const firebaseDate = admin.firestore.Timestamp.fromDate(date);
+    const name = body.name;
+    const dictionary = {'time': firebaseDate, 'info': ""};
+
+    const recordRef = db.collection('appointments').doc(name);
+    const doc = await recordRef.get();
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Patient does not exist' });
+    }
+    const data = doc.data();
+    const appointmentList = data.appointments || [];
+    appointmentList.push(dictionary);
+    await recordRef.update({ appointments: appointmentList });
+    res.status(200).json({ message: `Signed up successfully` });
+  } catch(error) {
+    console.error(`Error signing up for appointment`, error);
+    res.status(500).json({ error: `Error signing up for appointment` });
+  }
 });
 
 // GET for class offerings
