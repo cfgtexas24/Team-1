@@ -48,23 +48,42 @@ const ProviderDashboard = () => {
     }
   };
 
+  // Handle submitting updated patient data
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:8008/patients/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(patientData),
+
+    // Build the object for fields that have been modified
+    let updatedData = { name: patientData.name };
+
+    // Add only the fields that were modified
+    if (patientData.weight) updatedData.weight = patientData.weight;
+    if (patientData.bloodPressure) updatedData.bloodPressure = patientData.bloodPressure;
+    if (patientData.abdomenMeasurement) updatedData.abdomenMeasurement = patientData.abdomenMeasurement;
+    if (patientData.nutrition) updatedData.nutrition = patientData.nutrition;
+    if (patientData.exercise) updatedData.exercise = patientData.exercise;
+    if (patientData.prenatalTesting) updatedData.prenatalTesting = patientData.prenatalTesting;
+    if (patientData.concerns) updatedData.concerns = patientData.concerns;
+    if (patientData.emotionalWellBeing) updatedData.emotionalWellBeing = patientData.emotionalWellBeing;
+    if (patientData.birthPlan) updatedData.birthPlan = patientData.birthPlan;
+    updatedData.highRisk = patientData.highRisk; // Since this is a boolean field
+
+    // Send a POST request to update the patient data
+    fetch('http://localhost:8008/patient/record/update', {  // Use the correct API endpoint
+        method: 'POST',  // Change to POST as expected by the backend
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),  // Send only the updated fields
     })
-      .then(response => response.json())
-      .then(data => {
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
         alert('Patient data updated successfully!');
-      })
-      .catch(error => {
+    })
+    .catch((error) => {
         console.error('Error:', error);
         alert('There was an error updating the data.');
-      });
+    });
   };
 
   const addLabReport = () => {
