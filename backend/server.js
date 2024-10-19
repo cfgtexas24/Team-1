@@ -271,7 +271,7 @@ app.get('/classes/get', async(req, res) => {
 
 
 // GET to appts to fetch appts 
-app.get('/appointments/get', async(req, res) => {
+app.post('/appointments/get', async(req, res) => {
   let name = req.body.name;
   
   try {

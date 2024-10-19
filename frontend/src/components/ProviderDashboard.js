@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import './ProviderDashboard.css';
 
 const ProviderDashboard = () => {
   const { id } = useParams();  // Get the patient ID from the URL
@@ -88,11 +89,10 @@ const ProviderDashboard = () => {
 
   return (
     <div>
+      {/* Remove the editable name input field and dynamically display the patient's name */}
       <h1>Medical Record for {patientData.name}</h1>
+      
       <form onSubmit={handleSubmit}>
-        <label>Name:</label>
-        <input type="text" name="name" value={patientData.name} onChange={handleChange} />
-
         <label>Weight:</label>
         <input type="text" name="weight" value={patientData.weight} onChange={handleChange} />
 
@@ -125,12 +125,13 @@ const ProviderDashboard = () => {
 
       {/* Lab Reports Section */}
 
-      <h2>Lab Reports</h2>
+      <h2 className="lab-reports-title">Lab Reports</h2>
       <ul>
         {labReports.map((report, index) => (
           <li key={index}>{report}</li>
         ))}
       </ul>
+
       {/* Dropdown for Lab Type */}
       <label htmlFor="labType">Select Lab Report Type:</label>
       <select
@@ -152,6 +153,7 @@ const ProviderDashboard = () => {
         onChange={(e) => setLabResult(e.target.value)}
         placeholder="Enter lab result details here"
       />
+
       <button onClick={addLabReport}>Add Lab Report</button>
     </div>
   );
