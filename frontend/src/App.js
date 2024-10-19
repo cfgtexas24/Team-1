@@ -8,7 +8,7 @@ import PatientDashboard from './components/PatientDashboard';
 import ProviderDashboard from './components/ProviderDashboard';
 import AdminDashboard from './components/AdminDashboard'; // Import the AdminDashboard component
 import PatientList from './components/PatientList'; //up
-import './AdminDashboard.css';
+import './components/AdminDashboard.css';
 import SurveyForm from './components/SurveyForm';
 
 function App() {
