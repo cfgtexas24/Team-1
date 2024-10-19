@@ -174,12 +174,18 @@ app.get('/appointments/get', async(req, res) => {
   try {
     const apptsRef = db.collection('appointments').doc(name);
     const doc = await apptsRef.get();
+    console.log(doc.data())
+
+    // convert date from nasty Firebase format to ISO
+    const milliseconds = doc.data().date.seconds * 1000 + Math.floor(doc.data().date.nanoseconds / 1000);
+    const isoDateString = new Date(milliseconds).toISOString();
+    const normalizedData = {...doc.data(), date: isoDateString}
 
     if (!doc.exists) {
       return res.status(404).json({ message: 'No appointments found for this patient' });
     }
 
-    res.json(doc.data());
+    res.json(normalizedData);
   } catch (error) {
     console.error('Error fetching appointments:', error);
     res.status(500).json({ error: 'Error fetching appointments' });
