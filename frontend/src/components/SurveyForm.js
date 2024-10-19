@@ -178,7 +178,7 @@ const SurveyForm = () => {
       </select>
 
       <label>Are you currently on food stamps?</label>
-      <select value={foodStamps} onChange={(e) => foodStamps(e.target.value)} required>
+      <select value={foodStamps} onChange={(e) => setFoodStamps(e.target.value)} required>
         <option value="">Select</option>
         <option value="yes">Yes</option>
         <option value="no">No</option>
