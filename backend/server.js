@@ -22,10 +22,10 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const updateMedicalRecordField = async (req, res, field) => {
+const updateMedicalRecordField = async (req, res, field, newValue) => {
   const name = req.body.name; // Get the patient's name (document ID)
-  const newValue = req.body.newValue; // The new value for the field
-
+  //const newValue = req.body.newValue; // The new value for the field
+  console.log(newValue);
   try {
     const recordRef = db.collection('medicalRecords').doc(name);
 
@@ -247,8 +247,16 @@ app.get('/patient/record', async (req, res) => {
 });
 
 // POST to a specific patient's blood pressure
-app.post('/patient/record/update/bloodPressure', (req, res) => {
+/*app.post('/patient/record/update/bloodPressure', (req, res) => {
   updateMedicalRecordField(req, res, 'bloodPressure');
+});*/
+app.post('/patient/record/update', (req, res) => {
+  const body = req.body;
+  console.log(body);
+  const field = Object.keys(body)[1];
+  console.log(field);
+  console.log(body[field]);
+  updateMedicalRecordField(req, res, field, body[field]);
 });
 
 // Route to update nutrition
