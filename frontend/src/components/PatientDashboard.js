@@ -3,8 +3,17 @@ import { useState } from 'react'
 
 
 const patientDashboard = () => {
+
+  const [patient, setPatient] = useState(
+    {
+      firstName: "Jane",
+      lastName: "Doe",
+      age: 28,
+    }
+  )
+  
   return (
-    <div>patientDashboard</div>
+    <div></div>
   )
 }
 
