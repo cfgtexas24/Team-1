@@ -17,6 +17,8 @@ const ProviderDashboard = () => {
     birthPlan: '',
   });
   const [labReports, setLabReports] = useState([]);
+  const [selectedLabType, setSelectedLabType] = useState('Pregnancy result'); // Default dropdown option
+  const [labResult, setLabResult] = useState(''); // State for the result text input
 
   // Fetch the specific patient's data when the component loads
   useEffect(() => {
@@ -60,23 +62,27 @@ const ProviderDashboard = () => {
 
   // Add a new lab report
   const addLabReport = () => {
-    const newReport = prompt('Enter the new lab report:');
-    if (newReport) {
-      const updatedReports = [...labReports, newReport];
+    if (labResult) {
+      const newLabReport = `${selectedLabType}: ${labResult}`; // Combines the selected type with the text result
+      const updatedReports = [...labReports, newLabReport];
       setLabReports(updatedReports);
       setPatientData({ ...patientData, labReports: updatedReports });
 
-      // We could also send the new report to the backend here also
-      fetch(`http://localhost:8008/patients/${id}/lab-reports`, {  // Replace with the actual API endpoint
+      // Send the new report to the backend
+      fetch(`http://localhost:8008/api/patients/${id}/lab-reports`, {  // Replace with the actual API endpoint or
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ report: newReport }),
+        body: JSON.stringify({ report: newLabReport }),
       })
         .then(response => response.json())
         .then(data => console.log('Lab report added:', data))
         .catch((error) => console.error('Error adding lab report:', error));
+
+      // Clear the input fields after submission
+      setLabResult('');
+      setSelectedLabType('Pregnancy result'); // Reset dropdown to default
     }
   };
 
@@ -117,12 +123,35 @@ const ProviderDashboard = () => {
         <button type="submit">Save</button>
       </form>
 
+      {/* Lab Reports Section */}
+
       <h2>Lab Reports</h2>
       <ul>
         {labReports.map((report, index) => (
           <li key={index}>{report}</li>
         ))}
       </ul>
+      {/* Dropdown for Lab Type */}
+      <label htmlFor="labType">Select Lab Report Type:</label>
+      <select
+        id="labType"
+        value={selectedLabType}
+        onChange={(e) => setSelectedLabType(e.target.value)}
+      >
+        <option value="Pregnancy result">Pregnancy result</option>
+        <option value="Ultrasound result">Ultrasound result</option>
+        <option value="Blood test result">Blood test result</option>
+        <option value="Other">Other</option>
+      </select>
+
+      {/* Text field for Lab Result */}
+      <label htmlFor="labResult">Lab Report Details:</label>
+      <textarea
+        id="labResult"
+        value={labResult}
+        onChange={(e) => setLabResult(e.target.value)}
+        placeholder="Enter lab result details here"
+      />
       <button onClick={addLabReport}>Add Lab Report</button>
     </div>
   );

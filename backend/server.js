@@ -92,6 +92,25 @@ app.get('/patients', async (req, res) => {
       res.status(500).json({ error: 'Error fetching patients data' });
     }
 });
+
+// Fetch a single patient's data by their name (or ID)
+app.get('/patients/:id', async (req, res) => {
+  const patientId = req.params.id;
+
+  try {
+    const patientRef = db.collection('patients').doc(patientId);
+    const doc = await patientRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No patient data found' });
+    }
+
+    res.json(doc.data());
+  } catch (error) {
+    console.error('Error fetching patient data:', error);
+    res.status(500).json({ error: 'Error fetching patient data' });
+  }
+});
   
 // Initial Patient Form
 app.post('/patients/initial-form', async (req, res) => {
@@ -273,6 +292,24 @@ app.get('/patients/demographics', async (req, res) => {
   }
 });
 
+app.get('/patients/:id', async (req, res) => {
+  const patientId = req.params.id;
+
+  try {
+    const patientRef = db.collection('patients').doc(patientId);
+    const doc = await patientRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ message: 'No patient data found' });
+    }
+
+    res.json(doc.data());
+  } catch (error) {
+    console.error('Error fetching patient data:', error);
+    res.status(500).json({ error: 'Error fetching patient data' });
+  }
+});
+
 // PROVIDERS
 // Get all patients data
 app.get('/patients', async (req, res) => {
@@ -307,6 +344,10 @@ app.get('/patient/record', async (req, res) => {
   }
 });
 
+// POST to a specific patient's blood pressure
+/*app.post('/patient/record/update/bloodPressure', (req, res) => {
+  updateMedicalRecordField(req, res, 'bloodPressure');
+});*/
 // Update Patient Record
 app.post('/patient/record/update', (req, res) => {
   const body = req.body;
